@@ -1,11 +1,11 @@
 <?php
 
-class SD_Currency_Config {
+class SD_Currency_Model_Config {
     private $code;
     private $symbol;
     private $isDefault;
 
-    private function __construct($code, $symbol, $isDefault) {
+    private function __construct(string $code, string $symbol, bool $isDefault) {
         $this->code = $code;
         $this->symbol = $symbol;
         $this->isDefault = $isDefault;
@@ -19,7 +19,7 @@ class SD_Currency_Config {
         ];
     }
 
-    public static function getByCode($code) {
+    public static function getByCode(string $code) {
         switch ($code) {
             case 'RUB': return new self('RUB', '&#8381;', true);  // ₽
             case 'USD': return new self('USD', '&#36;',   false); // $
@@ -27,7 +27,7 @@ class SD_Currency_Config {
         }
     }
 
-    public static function getBySymbol($symbol) {
+    public static function getBySymbol(string $symbol) {
         $filter = array_filter(
             self::all(),
             function (self $config) use ($symbol) {

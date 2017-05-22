@@ -10,5 +10,5 @@ interface SD_Currency_Service_Store_Interface {
      *
      * TODO: Remove $datetime? now() is intended.
     **/
-    public function set(float $code, string $rate, DateTime $datetime);
+    public function set(string $code, float $rate, DateTime $datetime);
 }
