@@ -1,24 +1,20 @@
 <?php
 
-class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interface {
-    private $TABLENAME = 'wpcurr';
-    private $wpdb;
+class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interface, SD_DI_DeclarerInterface {
+    use SD_Service_Wordpress_AwareTrait;
 
-    public function __construct() {
-        global $wpdb;
-        $this->wpdb = $wpdb;
+    private $TABLENAME = 'wpcurr';
+
+    public function declareDependencies() {
+        return ['wordpress'];
     }
 
-    /**
-     * @param $code string
-     * @return SD_Currency_Option
-    **/
-    public function get($code) {
+    public function get(string $code): SD_Currency_Model_Option {
         // TODO: DRY with SD_Currency_FileStore::get
         if (SD_Currency_Config::getByCode($code)->isDefault()) {
-            return new SD_Currency_Option($code, 1, new DateTime());
+            return new SD_Currency_Model_Option($code, 1, new DateTime());
         }
-        $rows = $this->wpdb->get_results($this->wpdb->prepare(
+        $rows = $this->wpdb()->get_results($this->wpdb()->prepare(
             "
                 SELECT rate, update_time
                 FROM {$this->TABLENAME}
@@ -31,7 +27,7 @@ class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interfac
         }
         $row = $rows[0];
         // TODO: DRY with SD_Currency_FileStore::get
-        return new SD_Currency_Option($code, $row->rate, new DateTime($row->update_time));
+        return new SD_Currency_Model_Option($code, $row->rate, new DateTime($row->update_time));
     }
 
     /**
@@ -40,7 +36,7 @@ class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interfac
      * @param $datetime DateTime
     **/
     public function set($code, $rate, DateTime $datetime) {
-        $this->wpdb->query($this->wpdb->prepare(
+        $this->wpdb()->query($this->wpdb()->prepare(
             "
                 REPLACE INTO {$this->TABLENAME} (
                     code,
@@ -56,5 +52,9 @@ class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interfac
             $rate,
             $datetime->format('Y-m-d H:i:s')
         ));
+    }
+
+    private function wpdb() {
+        return $this->wordpress->wpdb();
     }
 }
