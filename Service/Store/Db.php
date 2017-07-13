@@ -1,7 +1,7 @@
 <?php
 
 class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interface, SD_DI_DeclarerInterface {
-    use SD_Service_Wordpress_AwareTrait;
+    use SD_CoreService_Wordpress_AwareTrait;
 
     private $TABLENAME = 'wpcurr';
 
