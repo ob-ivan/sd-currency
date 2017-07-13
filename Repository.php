@@ -43,6 +43,7 @@ class SD_Currency_Repository implements SD_DI_DeclarerInterface {
     }
 
     public function formatPrice($price, $symbol) {
+        $price = (int)$price;
         if ($symbol === '&#8381;') { // rub
             $format = 'PRICE_SYMBOL';
         } elseif (in_array($symbol, array(
