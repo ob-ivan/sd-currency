@@ -42,8 +42,7 @@ class SD_Currency_Repository implements SD_DI_DeclarerInterface {
         return $this->container->produce(SD_Currency_Service_Store_Db::class);
     }
 
-    public function formatPrice($price, $symbol) {
-        $price = (int)$price;
+    public function formatPrice(string $price, string $symbol): string {
         if ($symbol === '&#8381;') { // rub
             $format = 'PRICE_SYMBOL';
         } elseif (in_array($symbol, array(
@@ -63,7 +62,7 @@ class SD_Currency_Repository implements SD_DI_DeclarerInterface {
             $formatted = preg_replace(
                 '/(?<=\d)&(?=\d)/',
                 $separator,
-                number_format($price, 0, '.', $separator)
+                number_format((int)$price, 0, '.', $separator)
             );
             $fontAwesome = $this->getFontAwesome($symbol);
             $parts = [];
