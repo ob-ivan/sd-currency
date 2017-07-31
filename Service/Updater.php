@@ -30,7 +30,7 @@ class Updater {
                     str_replace('$code', $code, self::CBR_XPATH)
                 )[0];
                 $rate = floatval(str_replace(',', '.', $value));
-                $this->store->set($code, $rate, new DateTime());
+                $this->store->set($code, $rate, new \DateTime());
             }
         }
     }
