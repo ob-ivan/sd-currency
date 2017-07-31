@@ -48,8 +48,4 @@ class SD_Currency_Service_Store_Db implements SD_Currency_Service_Store_Interfac
             $datetime->format('Y-m-d H:i:s')
         ));
     }
-
-    private function wpdb() {
-        return $this->wordpress->wpdb();
-    }
 }
