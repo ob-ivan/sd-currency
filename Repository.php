@@ -1,7 +1,7 @@
 <?php
 
-class SD_Currency_Repository implements SD_DI_DeclarerInterface {
-    use SD_DI_ContainerAwareTrait;
+class SD_Currency_Repository implements SD\DependencyInjection\DeclarerInterface {
+    use SD\DependencyInjection\ContainerAwareTrait;
 
     public function declareDependencies() {
         return ['container'];
