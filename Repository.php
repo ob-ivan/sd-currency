@@ -50,6 +50,10 @@ class Repository implements DeclarerInterface {
         return SD_Currency_Model_Config::all();
     }
 
+    public function getUpdater() {
+        return new Updater($this->getStore());
+    }
+
     public function setStore(SD_Currency_Service_Store_Interface $store) {
         $this->store = $store;
     }

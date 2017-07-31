@@ -1,10 +1,15 @@
 <?php
 
-class SD_Currency_Service_Updater {
+namespace SD\Currency\Service;
+
+class Updater {
+    const CBR_URL = 'http://www.cbr.ru/scripts/XML_daily.asp';
+    const CBR_XPATH = '/ValCurs/Valute[CharCode="$code"]/Value';
+
     private $store;
 
-    public function __construct() {
-        $this->store = SD_Currency_StoreFactory::create();
+    public function __construct(SD_Currency_Service_Store_Interface $store) {
+        $this->store = $store;
     }
 
     public function updateRates() {
@@ -15,10 +20,12 @@ class SD_Currency_Service_Updater {
             }
         }
         if ($updateCodes) {
-            $xml = file_get_contents('http://www.cbr.ru/scripts/XML_daily.asp');
-            $simple = new SimpleXmlElement($xml);
+            $xml = file_get_contents(self::CBR_URL);
+            $simple = new \SimpleXmlElement($xml);
             foreach ($updateCodes as $code) {
-                $value = $simple->xpath("/ValCurs/Valute[CharCode='$code']/Value")[0];
+                $value = $simple->xpath(
+                    str_replace('$code', $code, self::CBR_XPATH)
+                )[0];
                 $rate = floatval(str_replace(',', '.', $value));
                 $this->store->set($code, $rate, new DateTime());
             }
@@ -33,6 +40,6 @@ class SD_Currency_Service_Updater {
         if (!$currency) {
             return true;
         }
-        return $currency->getUpdateTime() < new DateTime('-1 day');
+        return $currency->getUpdateTime() < new \DateTime('-1 day');
     }
 }
