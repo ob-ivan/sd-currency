@@ -1,6 +1,8 @@
 <?php
 
-class SD_Currency_Model_Config {
+namespace SD\Currency\Model;
+
+class Config {
     private $code;
     private $symbol;
     private $isDefault;

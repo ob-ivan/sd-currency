@@ -2,6 +2,8 @@
 
 namespace SD\Currency\Service;
 
+use SD\Currency\Model\Config;
+
 class Formatter {
     public function formatPrice(string $price, string $symbol): string {
         if ($symbol === '&#8381;') { // rub
@@ -38,7 +40,7 @@ class Formatter {
     }
 
     public function getFontAwesome($symbol) {
-        $config = SD_Currency_Model_Config::getBySymbol($symbol);
+        $config = Config::getBySymbol($symbol);
         if ($config) {
             return '<i class="fa fa-' . strtolower($config->getCode()) . '" aria-hidden="true"></i>';
         }

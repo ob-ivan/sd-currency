@@ -2,6 +2,7 @@
 
 namespace SD\Currency;
 
+use SD\Currency\Model\Config;
 use SD\Currency\Model\Option;
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
@@ -36,7 +37,7 @@ class Repository implements DeclarerInterface {
         ];
         $store = $this->getStore();
         return array_map(
-            function (SD_Currency_Model_Config $config) use ($shortLabels, $longLabels, $store) {
+            function (Config $config) use ($shortLabels, $longLabels, $store) {
                 $code = $config->getCode();
                 return (object)[
                     'code' => $code,
@@ -51,7 +52,7 @@ class Repository implements DeclarerInterface {
     }
 
     public function getAllConfigs() {
-        return SD_Currency_Model_Config::all();
+        return Config::all();
     }
 
     public function getUpdater() {
@@ -75,10 +76,10 @@ class Repository implements DeclarerInterface {
     }
 
     public function getConfigByCode(string $code) {
-        return SD_Currency_Model_Config::getByCode($code);
+        return Config::getByCode($code);
     }
 
     public function getConfigBySymbol(string $symbol) {
-        return SD_Currency_Model_Config::getBySymbol($symbol);
+        return Config::getBySymbol($symbol);
     }
 }
