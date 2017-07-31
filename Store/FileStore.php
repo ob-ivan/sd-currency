@@ -2,6 +2,8 @@
 
 namespace SD\Currency\Store;
 
+use SD\Currency\Model\Option;
+
 class FileStore implements StoreInterface {
     const FILENAME = 'currencies.json';
 
@@ -16,7 +18,7 @@ class FileStore implements StoreInterface {
     public function get($code) {
         // TODO: DRY with SD_Currency_DbStore::get
         if (SD_Currency_Config::getByCode($code)->isDefault()) {
-            return new SD_Currency_Model_Option($code, 1, new \DateTime());
+            return new Option($code, 1, new \DateTime());
         }
         if (!file_exists($this->filename)) {
             return null;
@@ -28,7 +30,7 @@ class FileStore implements StoreInterface {
             return null;
         }
         // TODO: DRY with SD_Currency_DbStore::get
-        return new SD_Currency_Model_Option($code, $data->rate, new \DateTime($data->updateTime));
+        return new Option($code, $data->rate, new \DateTime($data->updateTime));
     }
 
     /**
@@ -43,7 +45,7 @@ class FileStore implements StoreInterface {
         } else {
             $currencies = new \stdClass();
         }
-        $currencies->$code = new SD_Currency_Model_Option($code, $rate, $datetime);
+        $currencies->$code = new Option($code, $rate, $datetime);
         $encode = json_encode($currencies);
         file_put_contents($this->filename, $encode);
     }

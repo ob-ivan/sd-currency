@@ -2,6 +2,7 @@
 
 namespace SD\Currency;
 
+use SD\Currency\Model\Option;
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;
@@ -19,7 +20,7 @@ class Repository implements DeclarerInterface {
     }
 
     public function option($code, $rate, $datetime) {
-        return new SD_Currency_Model_Option($code, $rate, $datetime);
+        return new Option($code, $rate, $datetime);
     }
 
     public function getOptions() {

@@ -1,6 +1,8 @@
 <?php
 
-class SD_Currency_Model_Option implements JsonSerializable {
+namespace SD\Currency\Model;
+
+class Option implements \JsonSerializable {
     /** @var $code string */
     private $code;
 
@@ -10,7 +12,7 @@ class SD_Currency_Model_Option implements JsonSerializable {
     /** @var $udpateTime DateTime */
     private $updateTime;
 
-    public function __construct(string $code, float $rate, DateTime $updateTime) {
+    public function __construct(string $code, float $rate, \DateTime $updateTime) {
         $this->code = $code;
         $this->rate = $rate;
         $this->updateTime = $updateTime;
