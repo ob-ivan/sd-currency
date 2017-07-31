@@ -2,13 +2,15 @@
 
 namespace SD\Currency\Service;
 
+use SD\Currency\Store\StoreInterface;
+
 class Updater {
     const CBR_URL = 'http://www.cbr.ru/scripts/XML_daily.asp';
     const CBR_XPATH = '/ValCurs/Valute[CharCode="$code"]/Value';
 
     private $store;
 
-    public function __construct(SD_Currency_Service_Store_Interface $store) {
+    public function __construct(StoreInterface $store) {
         $this->store = $store;
     }
 

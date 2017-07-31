@@ -1,6 +1,8 @@
 <?php
 
-interface SD_Currency_Service_Store_Interface {
+namespace SD\Currency\Store;
+
+interface StoreInterface {
     public function get(string $code): SD_Currency_Model_Option;
 
     /**
@@ -10,5 +12,5 @@ interface SD_Currency_Service_Store_Interface {
      *
      * TODO: Remove $datetime? now() is intended.
     **/
-    public function set(string $code, float $rate, DateTime $datetime);
+    public function set(string $code, float $rate, \DateTime $datetime);
 }

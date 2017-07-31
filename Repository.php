@@ -3,6 +3,9 @@
 namespace SD\Currency;
 
 use SD\Currency\Service\Formatter;
+use SD\Currency\Service\Updater;
+use SD\Currency\Store\FileStore;
+use SD\Currency\Store\StoreInterface;
 use SD\DependencyInjection\DeclarerInterface;
 use SD\DependencyInjection\ContainerAwareTrait;
 
@@ -16,7 +19,7 @@ class Repository implements DeclarerInterface {
     }
 
     public function option($code, $rate, $datetime) {
-        return new SD_Currency_Option($code, $rate, $datetime);
+        return new SD_Currency_Model_Option($code, $rate, $datetime);
     }
 
     public function getOptions() {
@@ -54,13 +57,13 @@ class Repository implements DeclarerInterface {
         return new Updater($this->getStore());
     }
 
-    public function setStore(SD_Currency_Service_Store_Interface $store) {
+    public function setStore(StoreInterface $store) {
         $this->store = $store;
     }
 
-    public function getStore(): SD_Currency_Service_Store_Interface {
+    public function getStore(): StoreInterface {
         if (!$this->store) {
-            $this->store = $this->container->produce(SD_Currency_Service_Store_File::class);
+            $this->store = $this->container->produce(FileStore::class);
         }
         return $this->store;
         // return $this->container->produce(SD_Currency_Service_Store_Db::class);
