@@ -1,12 +1,21 @@
 <?php
 
-class SD_Currency_Repository implements SD\DependencyInjection\DeclarerInterface {
-    use SD\DependencyInjection\ContainerAwareTrait;
+namespace SD\Currency;
+
+use SD\DependencyInjection\DeclarerInterface;
+use SD\DependencyInjection\ContainerAwareTrait;
+
+class Repository implements DeclarerInterface {
+    use ContainerAwareTrait;
 
     private $store;
 
     public function declareDependencies() {
         return ['container'];
+    }
+
+    public function option($code, $rate, $datetime) {
+        return new SD_Currency_Option($code, $rate, $datetime);
     }
 
     public function getOptions() {
@@ -92,6 +101,10 @@ class SD_Currency_Repository implements SD\DependencyInjection\DeclarerInterface
             return '<i class="fa fa-' . strtolower($config->getCode()) . '" aria-hidden="true"></i>';
         }
         return '';
+    }
+
+    public function getConfigByCode(string $code) {
+        return SD_Currency_Model_Config::getByCode($code);
     }
 
     public function getConfigBySymbol(string $symbol) {
