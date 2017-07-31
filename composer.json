@@ -1,0 +1,8 @@
+{
+    "name": "ob-ivan/sd-currency",
+    "autoload": {
+        "psr-4": {
+            "SD\\Currency\\": "src/"
+        }
+    }
+}
