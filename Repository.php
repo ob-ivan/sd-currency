@@ -3,6 +3,8 @@
 class SD_Currency_Repository implements SD\DependencyInjection\DeclarerInterface {
     use SD\DependencyInjection\ContainerAwareTrait;
 
+    private $store;
+
     public function declareDependencies() {
         return ['container'];
     }
@@ -38,8 +40,16 @@ class SD_Currency_Repository implements SD\DependencyInjection\DeclarerInterface
         return SD_Currency_Model_Config::all();
     }
 
-    public function getStore() {
-        return $this->container->produce(SD_Currency_Service_Store_Db::class);
+    public function setStore(SD_Currency_Service_Store_Interface $store) {
+        $this->store = $store;
+    }
+
+    public function getStore(): SD_Currency_Service_Store_Interface {
+        if (!$this->store) {
+            $this->store = $this->container->produce(SD_Currency_Service_Store_File::class);
+        }
+        return $this->store;
+        // return $this->container->produce(SD_Currency_Service_Store_Db::class);
     }
 
     public function formatPrice(string $price, string $symbol): string {
