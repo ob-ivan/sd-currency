@@ -2,6 +2,7 @@
 
 namespace SD\Currency\Service;
 
+use SD\Currency\Model\Config;
 use SD\Currency\Store\StoreInterface;
 
 class Updater {
@@ -16,7 +17,7 @@ class Updater {
 
     public function updateRates() {
         $updateCodes = [];
-        foreach (SD_Currency_Config::all() as $config) {
+        foreach (Config::all() as $config) {
             if ($this->needUpdate($config)) {
                 $updateCodes[] = $config->getCode();
             }
@@ -34,7 +35,7 @@ class Updater {
         }
     }
 
-    private function needUpdate(SD_Currency_Config $config) {
+    private function needUpdate(Config $config) {
         if ($config->isDefault()) {
             return false;
         }

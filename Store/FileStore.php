@@ -2,6 +2,7 @@
 
 namespace SD\Currency\Store;
 
+use SD\Currency\Model\Config;
 use SD\Currency\Model\Option;
 
 class FileStore implements StoreInterface {
@@ -17,7 +18,7 @@ class FileStore implements StoreInterface {
     **/
     public function get($code) {
         // TODO: DRY with SD_Currency_DbStore::get
-        if (SD_Currency_Config::getByCode($code)->isDefault()) {
+        if (Config::getByCode($code)->isDefault()) {
             return new Option($code, 1, new \DateTime());
         }
         if (!file_exists($this->filename)) {
