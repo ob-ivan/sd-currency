@@ -3,10 +3,10 @@
 namespace SD\Currency;
 
 use SD\Currency\Model\Config;
-use SD\Currency\Model\Option;
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;
+use SD\Currency\Store\Record;
 use SD\Currency\Store\StoreInterface;
 use SD\DependencyInjection\DeclarerInterface;
 use SD\DependencyInjection\ContainerAwareTrait;
@@ -20,8 +20,8 @@ class Repository implements DeclarerInterface {
         return ['container'];
     }
 
-    public function option($code, $rate, $datetime) {
-        return new Option($code, $rate, $datetime);
+    public function createRecord($code, $rate, $datetime) {
+        return new Record($code, $rate, $datetime);
     }
 
     public function getOptions() {
