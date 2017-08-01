@@ -1,6 +1,6 @@
 <?php
 
-namespace SD\Currency\Model;
+namespace SD\Currency;
 
 class Config {
     private $code;

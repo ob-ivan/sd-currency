@@ -2,10 +2,8 @@
 
 namespace SD\Currency\Store;
 
-use SD\Currency\Model\Option;
-
 interface StoreInterface {
-    public function get(string $code): Option;
+    public function get(string $code): ?Record;
 
     /**
      * @param $code     string

@@ -2,7 +2,7 @@
 
 namespace SD\Currency\Service;
 
-use SD\Currency\Model\Config;
+use SD\Currency\Config;
 
 class Formatter {
     public function formatPrice(string $price, string $symbol): string {

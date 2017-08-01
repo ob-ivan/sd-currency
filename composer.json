@@ -4,5 +4,13 @@
         "psr-4": {
             "SD\\Currency\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.2"
     }
 }
