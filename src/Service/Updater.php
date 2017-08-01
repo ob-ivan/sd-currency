@@ -2,7 +2,7 @@
 
 namespace SD\Currency\Service;
 
-use SD\Currency\Model\Config;
+use SD\Currency\Config;
 use SD\Currency\Store\StoreInterface;
 
 class Updater {

@@ -2,7 +2,6 @@
 
 namespace SD\Currency;
 
-use SD\Currency\Model\Config;
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;

@@ -2,7 +2,7 @@
 
 namespace SD\Currency\Store;
 
-use SD\Currency\Model\Config;
+use SD\Currency\Config;
 
 class FileStore implements StoreInterface {
     const FILENAME = 'currencies.json';
