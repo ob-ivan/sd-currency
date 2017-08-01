@@ -7,7 +7,7 @@ use SD\Currency\Config;
 class FileStore implements StoreInterface {
     const FILENAME = 'currencies.json';
 
-    public function __construct($dir) {
+    public function __construct(string $dir) {
         $this->filename = $dir . '/' . self::FILENAME;
     }
 
@@ -15,8 +15,7 @@ class FileStore implements StoreInterface {
      * @param $code string
      * @return SD_Currency_Option
     **/
-    public function get($code) {
-        // TODO: DRY with SD_Currency_DbStore::get
+    public function get(string $code): ?Record {
         if (Config::getByCode($code)->isDefault()) {
             return new Record($code, 1, new \DateTime());
         }
@@ -29,7 +28,6 @@ class FileStore implements StoreInterface {
         if (!isset($data->rate) || !isset($data->updateTime)) {
             return null;
         }
-        // TODO: DRY with SD_Currency_DbStore::get
         return new Record($code, $data->rate, new \DateTime($data->updateTime));
     }
 
@@ -38,7 +36,7 @@ class FileStore implements StoreInterface {
      * @param $rate     float
      * @param $datetime DateTime
     **/
-    public function set($code, $rate, \DateTime $datetime) {
+    public function set(string $code, float $rate, \DateTime $datetime) {
         if (file_exists($this->filename)) {
             $contents = file_get_contents($this->filename);
             $currencies = json_decode($contents);

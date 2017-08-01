@@ -3,7 +3,7 @@
 namespace SD\Currency\Store;
 
 interface StoreInterface {
-    public function get(string $code): Record;
+    public function get(string $code): ?Record;
 
     /**
      * @param $code     string

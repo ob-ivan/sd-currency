@@ -7,16 +7,13 @@ use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;
 use SD\Currency\Store\Record;
 use SD\Currency\Store\StoreInterface;
-use SD\DependencyInjection\DeclarerInterface;
-use SD\DependencyInjection\ContainerAwareTrait;
 
-class Repository implements DeclarerInterface {
-    use ContainerAwareTrait;
+class Repository {
+    /** @var StoreInterface */
+    private $store = null;
 
-    private $store;
-
-    public function declareDependencies() {
-        return ['container'];
+    public function __construct(StoreInterface $store) {
+        $this->store = $store;
     }
 
     public function createRecord($code, $rate, $datetime) {
@@ -38,12 +35,13 @@ class Repository implements DeclarerInterface {
         return array_map(
             function (Config $config) use ($shortLabels, $longLabels, $store) {
                 $code = $config->getCode();
+                $record = $store->get($code);
                 return (object)[
                     'code' => $code,
                     'symbol' => $config->getSymbol(),
                     'shortLabel' => $shortLabels[$code],
                     'longLabel' => $longLabels[$code],
-                    'rate' => $store->get($code)->getRate(),
+                    'rate' => floatval($record ? $record->getRate() : 0),
                 ];
             },
             $this->getAllConfigs()
@@ -58,16 +56,8 @@ class Repository implements DeclarerInterface {
         return new Updater($this->getStore());
     }
 
-    public function setStore(StoreInterface $store) {
-        $this->store = $store;
-    }
-
-    public function getStore(): StoreInterface {
-        if (!$this->store) {
-            $this->store = $this->container->produce(FileStore::class);
-        }
+    public function getStore(): ?StoreInterface {
         return $this->store;
-        // return $this->container->produce(SD_Currency_Service_Store_Db::class);
     }
 
     public function getFormatter() {
