@@ -7,9 +7,8 @@ use SD\Currency\Store\FileStore;
 
 class RepositoryTest extends TestCase {
     public function testGetOptions() {
-        $repository = new Repository(
-            new FileStore(__DIR__)
-        );
+        $repository = new Repository();
+        $repository->setStore(new FileStore(__DIR__));
         $options = $repository->getOptions();
         $this->assertInternalType('array', $options, 'Options must be an array');
         $this->assertGreaterThanOrEqual(3, count($options), 'Must return at least 3 options');

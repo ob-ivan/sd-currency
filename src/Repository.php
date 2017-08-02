@@ -12,14 +12,6 @@ class Repository {
     /** @var StoreInterface */
     private $store = null;
 
-    public function __construct(StoreInterface $store) {
-        $this->store = $store;
-    }
-
-    public function createRecord($code, $rate, $datetime) {
-        return new Record($code, $rate, $datetime);
-    }
-
     public function getOptions() {
         $shortLabels = [
             'RUB' => 'рублях',
@@ -48,20 +40,28 @@ class Repository {
         );
     }
 
-    public function getAllConfigs() {
-        return Config::all();
-    }
-
     public function getUpdater() {
         return new Updater($this->getStore());
+    }
+
+    public function setStore(StoreInterface $store) {
+        $this->store = $store;
     }
 
     public function getStore(): ?StoreInterface {
         return $this->store;
     }
 
+    public function createRecord($code, $rate, $datetime) {
+        return new Record($code, $rate, $datetime);
+    }
+
     public function getFormatter() {
         return new Formatter();
+    }
+
+    public function getAllConfigs() {
+        return Config::all();
     }
 
     public function getConfigByCode(string $code) {
