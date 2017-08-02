@@ -10,4 +10,8 @@ trait CurrencyAwareTrait {
     public function setCurrency(Repository $currency) {
         $this->currency = $currency;
     }
+
+    private function getCurrency(): Repository {
+        return $this->currency;
+    }
 }
