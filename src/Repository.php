@@ -40,8 +40,8 @@ class Repository {
         );
     }
 
-    public function getUpdater() {
-        return new Updater($this->getStore());
+    public function getUpdater(array $config = []) {
+        return new Updater($this->getStore(), $config);
     }
 
     public function setStore(StoreInterface $store) {
