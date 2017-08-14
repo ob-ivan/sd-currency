@@ -18,6 +18,10 @@ class Record implements \JsonSerializable {
         $this->updateTime = $updateTime;
     }
 
+    public function getCode() {
+        return $this->code;
+    }
+
     public function getRate() {
         return $this->rate;
     }

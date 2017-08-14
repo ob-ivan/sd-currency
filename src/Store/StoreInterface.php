@@ -1,5 +1,4 @@
 <?php
-
 namespace SD\Currency\Store;
 
 interface StoreInterface {
@@ -10,7 +9,7 @@ interface StoreInterface {
      * @param $rate     float
      * @param $datetime DateTime
      *
-     * TODO: Remove $datetime? now() is intended.
+     * TODO: Accept single Record argument instead.
     **/
     public function set(string $code, float $rate, \DateTime $datetime);
 }

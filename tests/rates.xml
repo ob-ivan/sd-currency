@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<currencies>
+    <currency>
+        <code>USD</code>
+        <rate>65</rate>
+    </currency>
+    <currency>
+        <code>EUR</code>
+        <rate>75</rate>
+    </currency>
+</currencies>
