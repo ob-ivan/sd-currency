@@ -9,7 +9,7 @@ class Formatter {
 
     private $config = [];
 
-    public function __construct($config = []) {
+    public function __construct(array $config = []) {
         $this->config = $config + [
             'separator' => self::DEFAULT_SEPARATOR,
         ];

@@ -56,8 +56,8 @@ class Repository {
         return new Record($code, $rate, $datetime);
     }
 
-    public function getFormatter() {
-        return new Formatter();
+    public function getFormatter(array $config = []) {
+        return new Formatter($config);
     }
 
     public function getAllConfigs() {
