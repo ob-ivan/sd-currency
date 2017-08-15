@@ -5,6 +5,16 @@ namespace SD\Currency\Service;
 use SD\Currency\Config;
 
 class Formatter {
+    const DEFAULT_SEPARATOR = '&thinsp;';
+
+    private $config = [];
+
+    public function __construct($config = []) {
+        $this->config = $config + [
+            'separator' => self::DEFAULT_SEPARATOR,
+        ];
+    }
+
     public function formatPrice(string $price, string $symbol): string {
         if ($symbol === '&#8381;') { // rub
             $format = 'PRICE_SYMBOL';
@@ -19,9 +29,9 @@ class Formatter {
             $format = 'PRICE';
         }
         if ($format === 'PRICE') {
-            $output = esc_attr($price);
+            $output = $price;
         } else {
-            $separator = '&thinsp;';
+            $separator = $this->config['separator'];
             $formatted = preg_replace(
                 '/(?<=\d)&(?=\d)/',
                 $separator,
