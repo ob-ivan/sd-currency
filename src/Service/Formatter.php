@@ -5,6 +5,11 @@ namespace SD\Currency\Service;
 use SD\Currency\Config;
 
 class Formatter {
+    private $config = [];
+
+    public function __construct($config = []) {
+    }
+
     public function formatPrice(string $price, string $symbol): string {
         if ($symbol === '&#8381;') { // rub
             $format = 'PRICE_SYMBOL';
@@ -19,7 +24,7 @@ class Formatter {
             $format = 'PRICE';
         }
         if ($format === 'PRICE') {
-            $output = esc_attr($price);
+            $output = $price;
         } else {
             $separator = '&thinsp;';
             $formatted = preg_replace(
