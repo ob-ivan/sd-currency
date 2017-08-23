@@ -123,6 +123,25 @@ class CurrencyProvider extends CurrencyProvider {
 }
 ```
 
+Consumers may use dependency injection trait which takes advantage of the auto declare feature:
+
+```php
+use SD\Currency\DependencyInjection\CurrencyAwareTrait;
+use SD\DependencyInjection\AutoDeclarerInterface;
+use SD\DependencyInjection\AutoDeclarerTrait;
+
+class ExampleController implements AutoDeclarerInterface {
+    use AutoDeclarerTrait;
+    use CurrencyAwareTrait;
+
+    public function exampleAction() {
+        return $this->render('example.twig', [
+            'currencyOptions' => $this->getCurrency()->getOptions(),
+        ]);
+    }
+}
+```
+
 Development
 ===========
 To run tests:
