@@ -42,12 +42,14 @@ class Formatter {
                 $separator,
                 number_format((int)$price, 0, '.', $separator)
             );
-            $fontAwesome = $this->getFontAwesome($symbol);
+            if ($this->config[self::CONFIG_KEY_FONT_AWESOME]) {
+                $symbol = $this->getFontAwesome($symbol);
+            }
             $parts = [];
             if ($format === 'PRICE_SYMBOL') {
-                $parts = [$formatted, $fontAwesome];
+                $parts = [$formatted, $symbol];
             } elseif ($format === 'SYMBOL_PRICE') {
-                $parts = [$fontAwesome, $formatted];
+                $parts = [$symbol, $formatted];
             }
             $output = implode($parts, '&nbsp;');
         }
