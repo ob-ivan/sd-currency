@@ -5,13 +5,18 @@ namespace SD\Currency\Service;
 use SD\Currency\Config;
 
 class Formatter {
-    const DEFAULT_SEPARATOR = '&thinsp;';
+    const CONFIG_KEY_SEPARATOR = 'separator';
+    const CONFIG_KEY_FONT_AWESOME = 'fontAwesome';
+
+    const CONFIG_DEFAULT_SEPARATOR = '&thinsp;';
+    const CONFIG_DEFAULT_FONT_AWESOME = true;
 
     private $config = [];
 
     public function __construct(array $config = []) {
         $this->config = $config + [
-            'separator' => self::DEFAULT_SEPARATOR,
+            self::CONFIG_KEY_SEPARATOR    => self::CONFIG_DEFAULT_SEPARATOR,
+            self::CONFIG_KEY_FONT_AWESOME => self::CONFIG_DEFAULT_FONT_AWESOME,
         ];
     }
 
@@ -31,18 +36,20 @@ class Formatter {
         if ($format === 'PRICE') {
             $output = $price;
         } else {
-            $separator = $this->config['separator'];
+            $separator = $this->config[self::CONFIG_KEY_SEPARATOR];
             $formatted = preg_replace(
                 '/(?<=\d)&(?=\d)/',
                 $separator,
                 number_format((int)$price, 0, '.', $separator)
             );
-            $fontAwesome = $this->getFontAwesome($symbol);
+            if ($this->config[self::CONFIG_KEY_FONT_AWESOME]) {
+                $symbol = $this->getFontAwesome($symbol);
+            }
             $parts = [];
             if ($format === 'PRICE_SYMBOL') {
-                $parts = [$formatted, $fontAwesome];
+                $parts = [$formatted, $symbol];
             } elseif ($format === 'SYMBOL_PRICE') {
-                $parts = [$fontAwesome, $formatted];
+                $parts = [$symbol, $formatted];
             }
             $output = implode($parts, '&nbsp;');
         }
