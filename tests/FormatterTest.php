@@ -47,6 +47,15 @@ class FormatterTest extends TestCase {
                 'expected' => '<i class="fa fa-eur" aria-hidden="true"></i>&nbsp;31&thinsp;415&thinsp;926',
                 'message' => 'Must insert default separator if not provided in config',
             ],
+            [
+                'config' => [
+                    'fontAwesome' => false,
+                ],
+                'price' => '271828',
+                'symbol' => '&#8364;',
+                'expected' => '&#8364;&nbsp;271&thinsp;828',
+                'message' => 'Must disable font awesome if requested by config',
+            ],
         ];
     }
 }
