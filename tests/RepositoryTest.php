@@ -16,8 +16,6 @@ class RepositoryTest extends TestCase {
             foreach ([
                 'code' => 'string',
                 'symbol' => 'string',
-                'shortLabel' => 'string',
-                'longLabel' => 'string',
                 'rate' => 'float',
             ] as $field => $type) {
                 $this->assertInternalType('object', $option, "Option must be an object");

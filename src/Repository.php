@@ -15,7 +15,7 @@ class Repository {
     public function getOptions() {
         $store = $this->getStore();
         return array_map(
-            function (Config $config) use ($shortLabels, $longLabels, $store) {
+            function (Config $config) use ($store) {
                 $code = $config->getCode();
                 $record = $store->get($code);
                 return (object)[
