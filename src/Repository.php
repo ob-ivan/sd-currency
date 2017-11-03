@@ -13,16 +13,6 @@ class Repository {
     private $store = null;
 
     public function getOptions() {
-        $shortLabels = [
-            'RUB' => 'рублях',
-            'USD' => 'долларах',
-            'EUR' => 'евро',
-        ];
-        $longLabels = [
-            'RUB' => 'стоимость в рублях',
-            'USD' => 'стоимость в долларах',
-            'EUR' => 'стоимость в евро',
-        ];
         $store = $this->getStore();
         return array_map(
             function (Config $config) use ($shortLabels, $longLabels, $store) {
@@ -31,8 +21,6 @@ class Repository {
                 return (object)[
                     'code' => $code,
                     'symbol' => $config->getSymbol(),
-                    'shortLabel' => $shortLabels[$code],
-                    'longLabel' => $longLabels[$code],
                     'rate' => floatval($record ? $record->getRate() : 0),
                 ];
             },
