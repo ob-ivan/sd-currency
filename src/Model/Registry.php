@@ -4,11 +4,11 @@ namespace SD\Currency\Model;
 class Registry {
     private $currenciesByCode;
 
-    private function __construct() {
+    public function __construct() {
         $this->currenciesByCode = [
-            'RUB' => new Currency('RUB', '₽', '&#8381;');
-            'USD' => new Currency('USD', '$', '&#36;');
-            'EUR' => new Currency('EUR', '€', '&#8364;');
+            'RUB' => new Currency('RUB', '₽', '&#8381;'),
+            'USD' => new Currency('USD', '$', '&#36;'),
+            'EUR' => new Currency('EUR', '€', '&#8364;'),
         ];
     }
 

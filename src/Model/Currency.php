@@ -6,7 +6,7 @@ class Currency {
     private $unicode;
     private $html;
 
-    private function __construct(string $code, string $unicode, string $html) {
+    public function __construct(string $code, string $unicode, string $html) {
         $this->code = $code;
         $this->unicode = $unicode;
         $this->html = $html;

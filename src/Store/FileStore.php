@@ -1,5 +1,4 @@
 <?php
-
 namespace SD\Currency\Store;
 
 use SD\Currency\Config;
@@ -16,9 +15,11 @@ class FileStore implements StoreInterface {
      * @return SD_Currency_Option
     **/
     public function get(string $code): ?Record {
+        /* // TODO: Move to updater.
         if (Config::getByCode($code)->isDefault()) {
             return new Record($code, 1, new \DateTime());
         }
+        */
         if (!file_exists($this->filename)) {
             return null;
         }
