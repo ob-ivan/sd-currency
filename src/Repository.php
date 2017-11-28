@@ -35,7 +35,7 @@ class Repository {
     }
 
     public function getUpdater(array $config = []) {
-        return new Updater($this->getStore(), $config);
+        return new Updater($this->getStore(), $this->registry, $config);
     }
 
     public function setStore(StoreInterface $store) {
