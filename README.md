@@ -10,9 +10,9 @@ composer require ob-ivan/sd-currency
 Usage
 =====
 
-Config
-------
-A currency config instance associates currency symbol (as an HTML entity) with currency code.
+Currencies Registry
+-------------------
+A currency instance associates currency code with its representations in Unicode and as an HTML entity.
 
 These currencies are supported:
 - RUB
@@ -22,17 +22,18 @@ These currencies are supported:
 You can enumerate available currencies like follows:
 
 ```php
-use SD\Currency\Config;
+use SD\Currency\Model\Registry;
 
-foreach (Config::all() as $config) {
-    print "<p>The symbol for {$config->getCode()} is {$config->getSymbol()}</p>\n";
+$registry = new Registry();
+foreach ($registry->getAll() as $currency) {
+    print "<p>The Unicode symbol for {$currency->getCode()} is {$currency->getUnicode()}</p>\n";
 }
 ```
 
 Or if you use dependency injection (see below):
 
 ```php
-foreach ($this->getCurrency()->getAllConfigs() as $config) {
+foreach ($this->getCurrency()->getRegistry()->getAll() as $currency) {
     ...
 }
 ```
@@ -43,9 +44,11 @@ Use formatter service to format price according to given currency. Formatter ins
 with a string to use as thousand separator:
 
 ```php
+use SD\Currency\Model\Registry;
 use SD\Currency\Service\Formatter;
 
-$formatter = new Formatter(['separator' => '.']);
+$registry = new Registry();
+$formatter = new Formatter($registry, ['separator' => '.']);
 // or using dependency injection:
 $formatter = $this->getCurrency()->getFormatter(['separator' => '.']);
 
@@ -77,7 +80,7 @@ $repository->setStore($store);
 $options = $repository->getOptions();
 ```
 
-The store is used to... ahem... store currency rates and update time. The available file store
+The store is used to--sorry--store currency rates and update time. The available file store
 implementation uses a json file on hard drive. You can implement `SD\Currency\Store\StoreInterface`
 to provide your own kind of store, e.g. in database or memcache. See file store implementation
 for the details.
@@ -89,13 +92,16 @@ which is Central Bank of Russia by default. You can provide it with your own XML
 as well as update interval (defaults to '1 day') if you don't want to make too much requests to your source.
 
 ```php
+use SD\Currency\Model\Registry;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;
 
 $store = new FileStore(__DIR__);
-$updater = new Updater($store, [
+$registry = new Registry();
+$updaterConfig = [
     'update_interval' => '30 minutes',
-]);
+];
+$updater = new Updater($store, $registry, $updaterConfig);
 $updater->updateRates();
 ```
 

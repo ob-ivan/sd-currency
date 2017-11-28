@@ -1,5 +1,4 @@
 <?php
-
 namespace SD\Currency;
 
 class Config {
@@ -8,12 +7,14 @@ class Config {
     private $isDefault;
 
     private function __construct(string $code, string $symbol, bool $isDefault) {
+        trigger_error(__CLASS__ . ' is deprecated, use SD\\Currency\\Model\\Currency instead');
         $this->code = $code;
         $this->symbol = $symbol;
         $this->isDefault = $isDefault;
     }
 
     public static function all() {
+        trigger_error(__CLASS__ . ' is deprecated, use SD\\Currency\\Model\\Registry instead');
         return [
             self::getByCode('RUB'),
             self::getByCode('USD'),
@@ -22,6 +23,7 @@ class Config {
     }
 
     public static function getByCode(string $code) {
+        trigger_error(__CLASS__ . ' is deprecated, use SD\\Currency\\Model\\Registry instead');
         switch ($code) {
             case 'RUB': return new self('RUB', '&#8381;', true);  // ₽
             case 'USD': return new self('USD', '&#36;',   false); // $
@@ -30,6 +32,7 @@ class Config {
     }
 
     public static function getBySymbol(string $symbol) {
+        trigger_error(__CLASS__ . ' is deprecated, use SD\\Currency\\Model\\Registry instead');
         $filter = array_filter(
             self::all(),
             function (self $config) use ($symbol) {

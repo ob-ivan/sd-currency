@@ -2,6 +2,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use SD\Currency\Model\Registry;
 use SD\Currency\Service\Formatter;
 
 class FormatterTest extends TestCase {
@@ -9,7 +10,8 @@ class FormatterTest extends TestCase {
      * @dataProvider formatPriceDataProvider
     **/
     public function testFormatPrice($config, $price, $symbol, $expected, $message) {
-        $formatter = new Formatter($config);
+        $registry = new Registry();
+        $formatter = new Formatter($registry, $config);
         $this->assertEquals($expected, $formatter->formatPrice($price, $symbol), $message);
     }
 
