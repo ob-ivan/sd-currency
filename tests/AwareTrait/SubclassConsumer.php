@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\AwareTrait;
 
 class SubclassConsumer extends ParentConsumer {
     public function getService() {

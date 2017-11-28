@@ -4,7 +4,6 @@ namespace SD\Currency;
 
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
-use SD\Currency\Store\FileStore;
 use SD\Currency\Store\Record;
 use SD\Currency\Store\StoreInterface;
 

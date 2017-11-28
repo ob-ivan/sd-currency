@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\AwareTrait;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\DependencyInjection\CurrencyProvider;

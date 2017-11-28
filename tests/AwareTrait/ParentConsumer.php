@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\AwareTrait;
 
 use SD\Currency\DependencyInjection\CurrencyAwareTrait;
 use SD\DependencyInjection\AutoDeclarerInterface;
