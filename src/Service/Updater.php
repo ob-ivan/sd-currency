@@ -1,7 +1,6 @@
 <?php
 namespace SD\Currency\Service;
 
-use SD\Currency\Config;
 use SD\Currency\Model\Currency;
 use SD\Currency\Model\Registry;
 use SD\Currency\Store\StoreInterface;

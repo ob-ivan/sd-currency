@@ -51,7 +51,7 @@ class Repository {
     }
 
     public function getFormatter(array $config = []) {
-        return new Formatter($config);
+        return new Formatter($this->registry, $config);
     }
 
     public function getRegistry() {

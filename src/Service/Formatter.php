@@ -1,8 +1,7 @@
 <?php
-
 namespace SD\Currency\Service;
 
-use SD\Currency\Config;
+use SD\Currency\Model\Registry;
 
 class Formatter {
     const CONFIG_KEY_SEPARATOR = 'separator';
@@ -11,9 +10,11 @@ class Formatter {
     const CONFIG_DEFAULT_SEPARATOR = '&thinsp;';
     const CONFIG_DEFAULT_FONT_AWESOME = true;
 
+    private $registry;
     private $config = [];
 
-    public function __construct(array $config = []) {
+    public function __construct(Registry $registry, array $config = []) {
+        $this->registry = $registry;
         $this->config = $config + [
             self::CONFIG_KEY_SEPARATOR    => self::CONFIG_DEFAULT_SEPARATOR,
             self::CONFIG_KEY_FONT_AWESOME => self::CONFIG_DEFAULT_FONT_AWESOME,
@@ -57,9 +58,9 @@ class Formatter {
     }
 
     public function getFontAwesome($symbol) {
-        $config = Config::getBySymbol($symbol);
-        if ($config) {
-            return '<i class="fa fa-' . strtolower($config->getCode()) . '" aria-hidden="true"></i>';
+        $currency = $this->registry->getByHtml($symbol);
+        if ($currency) {
+            return '<i class="fa fa-' . strtolower($currency->getCode()) . '" aria-hidden="true"></i>';
         }
         return '';
     }

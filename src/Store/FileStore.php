@@ -1,8 +1,6 @@
 <?php
 namespace SD\Currency\Store;
 
-use SD\Currency\Config;
-
 class FileStore implements StoreInterface {
     const FILENAME = 'currencies.json';
 
