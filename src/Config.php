@@ -1,5 +1,4 @@
 <?php
-
 namespace SD\Currency;
 
 class Config {
