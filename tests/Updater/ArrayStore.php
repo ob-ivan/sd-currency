@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\Updater;
 
 use SD\Currency\Store\Record;
 use SD\Currency\Store\StoreInterface;

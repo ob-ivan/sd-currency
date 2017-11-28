@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\Updater;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\Service\Updater;
