@@ -4,6 +4,7 @@ namespace tests\Updater;
 use PHPUnit\Framework\TestCase;
 use SD\Currency\Model\Registry;
 use SD\Currency\Service\Updater;
+use SD\Currency\Store\ArrayStore;
 use SD\Currency\Store\Record;
 
 class UpdaterTest extends TestCase {
