@@ -33,6 +33,12 @@ class Formatter {
 
     public function __construct(Registry $registry, array $config = []) {
         $this->registry = $registry;
+        if (isset($config[self::CONFIG_KEY_SEPARATOR])) {
+            trigger_error('Use thousandSeparator instead', E_USER_DEPRECATED);
+        }
+        if (isset($config[self::CONFIG_KEY_FONT_AWESOME])) {
+            trigger_error('Use symbolType instead', E_USER_DEPRECATED);
+        }
         $this->config = $config + [
             // NEW //
             self::CONFIG_KEY_THOUSAND_SEPARATOR => self::CONFIG_DEFAULT_THOUSAND_SEPARATOR,
@@ -55,6 +61,7 @@ class Formatter {
     }
 
     public function formatPrice(string $price, string $symbol): string {
+        trigger_error('Use formatMoney instead', E_USER_DEPRECATED);
         if ($symbol === '&#8381;') { // rub
             $format = 'PRICE_SYMBOL';
         } elseif (in_array($symbol, array(
