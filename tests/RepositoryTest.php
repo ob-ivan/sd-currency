@@ -5,6 +5,8 @@ use PHPUnit\Framework\TestCase;
 use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 use SD\Currency\Repository;
+use SD\Currency\Service\Converter;
+use SD\Currency\Store\ArrayStore;
 use SD\Currency\Store\FileStore;
 
 class RepositoryTest extends TestCase {
@@ -54,5 +56,12 @@ class RepositoryTest extends TestCase {
                 $this->assertInternalType($type, $option->$field, "Field $field must have type $type");
             }
         }
+    }
+
+    public function testGetConverter() {
+        $repository = new Repository();
+        $repository->setStore(new ArrayStore([]));
+        $converter = $repository->getConverter();
+        $this->assertInstanceOf(Converter::class, $converter, 'Must return instance of converter');
     }
 }

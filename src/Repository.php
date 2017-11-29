@@ -4,6 +4,7 @@ namespace SD\Currency;
 use SD\Currency\Model\Currency;
 use SD\Currency\Model\Registry;
 use SD\Currency\Model\Money;
+use SD\Currency\Service\Converter;
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\Record;
