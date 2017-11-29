@@ -6,9 +6,9 @@ class Registry {
 
     public function __construct() {
         $this->currenciesByCode = [
-            'RUB' => new Currency('RUB', '₽', '&#8381;'),
-            'USD' => new Currency('USD', '$', '&#36;'),
-            'EUR' => new Currency('EUR', '€', '&#8364;'),
+            'RUB' => new Currency('RUB', '₽', '&#8381;', Currency::POSITION_AFTER),
+            'USD' => new Currency('USD', '$', '&#36;', Currency::POSITION_BEFORE),
+            'EUR' => new Currency('EUR', '€', '&#8364;', Currency::POSITION_BEFORE),
         ];
     }
 

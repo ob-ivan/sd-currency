@@ -4,18 +4,19 @@ namespace tests\Updater;
 use PHPUnit\Framework\TestCase;
 use SD\Currency\Model\Registry;
 use SD\Currency\Service\Updater;
+use SD\Currency\Store\ArrayStore;
 use SD\Currency\Store\Record;
 
 class UpdaterTest extends TestCase {
     public function testUpdateRates() {
+        $registry = new Registry();
         $store = new ArrayStore([
             new Record('USD', 60, new \DateTime('-1 min')),
             new Record('EUR', 70, new \DateTime('-3 min')),
         ]);
-        $registry = new Registry();
         $updater = new Updater(
-            $store,
             $registry,
+            $store,
             [
                 'url' => __DIR__ . '/rates.xml',
                 'xpath' => '/currencies/currency[code = "$code"]/rate',

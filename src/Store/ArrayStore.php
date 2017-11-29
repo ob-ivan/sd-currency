@@ -1,8 +1,5 @@
 <?php
-namespace tests\Updater;
-
-use SD\Currency\Store\Record;
-use SD\Currency\Store\StoreInterface;
+namespace SD\Currency\Store;
 
 class ArrayStore implements StoreInterface {
     private $records = [];

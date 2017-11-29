@@ -15,7 +15,7 @@ class Updater {
     private $registry;
     private $config;
 
-    public function __construct(StoreInterface $store, Registry $registry, array $config = []) {
+    public function __construct(Registry $registry, StoreInterface $store, array $config = []) {
         $this->store = $store;
         $this->registry = $registry;
         $this->config = $config + [

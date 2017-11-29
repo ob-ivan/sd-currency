@@ -40,21 +40,21 @@ foreach ($this->getCurrency()->getRegistry()->getAll() as $currency) {
 
 Formatter
 ---------
-Use formatter service to format price according to given currency. Formatter instance is configured
-with a string to use as thousand separator:
+Use formatter service to format price according to given currency. Formatter instance uses a number
+of configuration parameters.
 
 ```php
+use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 use SD\Currency\Service\Formatter;
 
 $registry = new Registry();
-$formatter = new Formatter($registry, ['separator' => '.']);
+$formatter = new Formatter($registry, ['thousandSeparator' => '\'']);
 // or using dependency injection:
-$formatter = $this->getCurrency()->getFormatter(['separator' => '.']);
+$formatter = $this->getCurrency()->getFormatter(['thousandSeparator' => '\'']);
 
-echo $formatter->formatPrice('10000', '&#36;'); // $ 10.000
-echo $formatter->formarPrice('590000', '&#8381;'); // 590.000 ₽
-echo $formatter->formatPrice('n/a', ''); // n/a
+echo $formatter->formatMoney(new Money(10000, $registry->getByCode('USD'))); // $ 10'000
+echo $formatter->formatMoney(new Money(590000, $registry->getByCode('RUB'))); // 590'000 ₽
 ```
 
 Repository & Store
@@ -96,12 +96,12 @@ use SD\Currency\Model\Registry;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;
 
-$store = new FileStore(__DIR__);
 $registry = new Registry();
+$store = new FileStore(__DIR__);
 $updaterConfig = [
     'update_interval' => '30 minutes',
 ];
-$updater = new Updater($store, $registry, $updaterConfig);
+$updater = new Updater($registry, $store, $updaterConfig);
 $updater->updateRates();
 ```
 
