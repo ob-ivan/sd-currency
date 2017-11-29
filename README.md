@@ -96,12 +96,12 @@ use SD\Currency\Model\Registry;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\FileStore;
 
-$store = new FileStore(__DIR__);
 $registry = new Registry();
+$store = new FileStore(__DIR__);
 $updaterConfig = [
     'update_interval' => '30 minutes',
 ];
-$updater = new Updater($store, $registry, $updaterConfig);
+$updater = new Updater($registry, $store, $updaterConfig);
 $updater->updateRates();
 ```
 
