@@ -76,7 +76,7 @@ class FormatterTest extends TestCase {
         return [
             [
                 'config' => [
-                    'separator' => '+',
+                    'thousandSeparator' => '+',
                     'symbolType' => 'html',
                 ],
                 'money' => new Money(7777777, $registry->getByCode('RUB')),
@@ -85,7 +85,7 @@ class FormatterTest extends TestCase {
             ],
             [
                 'config' => [
-                    'separator' => '/',
+                    'thousandSeparator' => '/',
                     'symbolType' => 'unicode',
                 ],
                 'money' => new Money(123456, $registry->getByCode('USD')),
