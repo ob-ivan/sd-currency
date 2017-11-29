@@ -18,12 +18,27 @@ class Repository {
         $this->registry = new Registry();
     }
 
+    public function getRegistry() {
+        return $this->registry;
+    }
+
+    public function createRecord($code, $rate, $datetime) {
+        return new Record($code, $rate, $datetime);
+    }
+
+    public function setStore(StoreInterface $store) {
+        $this->store = $store;
+    }
+
+    public function getStore(): ?StoreInterface {
+        return $this->store;
+    }
+
     public function getOptions() {
-        $store = $this->getStore();
         return array_map(
-            function (Currency $currency) use ($store) {
+            function (Currency $currency) {
                 $code = $currency->getCode();
-                $record = $store->get($code);
+                $record = $this->store->get($code);
                 return (object)[
                     'code' => $code,
                     'symbol' => $currency->getHtml(),
@@ -35,27 +50,15 @@ class Repository {
     }
 
     public function getUpdater(array $config = []) {
-        return new Updater($this->getStore(), $this->registry, $config);
-    }
-
-    public function setStore(StoreInterface $store) {
-        $this->store = $store;
-    }
-
-    public function getStore(): ?StoreInterface {
-        return $this->store;
-    }
-
-    public function createRecord($code, $rate, $datetime) {
-        return new Record($code, $rate, $datetime);
+        return new Updater($this->registry, $this->store, $config);
     }
 
     public function getFormatter(array $config = []) {
         return new Formatter($this->registry, $config);
     }
 
-    public function getRegistry() {
-        return $this->registry;
+    public function getConverter() {
+        return new Converter($this->registry, $this->store);
     }
 
     public function getAllConfigs() {
