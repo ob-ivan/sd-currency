@@ -56,6 +56,13 @@ class ConverterTest extends TestCase {
                 'expectedCurrency' => $registry->getByCode('RUB'),
                 'description' => 'EUR to RUB',
             ],
+            [
+                'money' => new Money(3000000000, $registry->getByCode('RUB')),
+                'currency' => 'RUB',
+                'expectedAmount' => 3000000000,
+                'expectedCurrency' => $registry->getByCode('RUB'),
+                'description' => 'RUB to RUB',
+            ],
         ];
     }
 }
