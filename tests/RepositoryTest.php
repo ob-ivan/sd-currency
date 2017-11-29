@@ -2,6 +2,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 use SD\Currency\Repository;
 use SD\Currency\Store\FileStore;

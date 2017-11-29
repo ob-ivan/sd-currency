@@ -3,6 +3,7 @@ namespace SD\Currency;
 
 use SD\Currency\Model\Currency;
 use SD\Currency\Model\Registry;
+use SD\Currency\Model\Money;
 use SD\Currency\Service\Formatter;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\Record;
@@ -18,9 +19,20 @@ class Repository {
         $this->registry = new Registry();
     }
 
+    // Model //
+
     public function getRegistry() {
         return $this->registry;
     }
+
+    public function createMoney($amount, $currency) {
+        if (is_string($currency)) {
+            $currency = $this->registry->getByCode($currency);
+        }
+        return new Money(intval($amount), $currency);
+    }
+
+    // Store //
 
     public function createRecord($code, $rate, $datetime) {
         return new Record($code, $rate, $datetime);
@@ -49,6 +61,8 @@ class Repository {
         );
     }
 
+    // Service //
+
     public function getUpdater(array $config = []) {
         return new Updater($this->registry, $this->store, $config);
     }
@@ -60,6 +74,8 @@ class Repository {
     public function getConverter() {
         return new Converter($this->registry, $this->store);
     }
+
+    // Deprecated //
 
     public function getAllConfigs() {
         trigger_error(__METHOD__ . ' is deprecated, use ' . __CLASS__ . '->getRegistry()->getAll() instead');
