@@ -2,10 +2,40 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use SD\Currency\Model\Registry;
 use SD\Currency\Repository;
 use SD\Currency\Store\FileStore;
 
 class RepositoryTest extends TestCase {
+    /**
+     * @dataProvider createMoneyDataProvider
+    **/
+    public function testCreateMoney($amount, $currency, $expectedCurrency) {
+        $repository = new Repository();
+        $money = $repository->createMoney($amount, $currency);
+        $this->assertInstanceOf(Money::class, $money, 'Created money must be of money class');
+        $this->assertEquals($amount, $money->getAmount(), 'Created amount must match');
+        $this->assertEquals($expectedCurrency, $money->getCurrency(), 'Created currency must match');
+    }
+
+    public function createMoneyDataProvider() {
+        $registry = new Registry();
+        return [
+            [
+                'amount' => 450,
+                'currency' => $registry->getByCode('RUB'),
+                'expectedCurrency' => $registry->getByCode('RUB'),
+                'description' => 'Currency as object',
+            ],
+            [
+                'amount' => 550,
+                'currency' => 'USD',
+                'expectedCurrency' => $registry->getByCode('USD'),
+                'description' => 'Currency as string',
+            ],
+        ];
+    }
+
     public function testGetOptions() {
         $repository = new Repository();
         $repository->setStore(new FileStore(__DIR__));
