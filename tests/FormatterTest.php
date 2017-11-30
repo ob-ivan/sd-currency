@@ -56,6 +56,16 @@ class FormatterTest extends TestCase {
                 'expected' => '271&thinsp;828&nbsp;руб.',
                 'message' => 'Must get currency symbol from a map',
             ],
+            [
+                'config' => [
+                    'thousandSeparator' => '&nbsp;',
+                    'roundDirection' => 'round',
+                    'roundDigits' => 3,
+                ],
+                'money' => new Money(9253377, $registry->getByCode('USD')),
+                'expected' => '$&nbsp;9&nbsp;250&nbsp;000',
+                'message' => 'Must round amount to given number of significant digis',
+            ],
         ];
     }
 }
