@@ -68,10 +68,11 @@ class FormatterTest extends TestCase {
             ],
             [
                 'config' => [
+                    'thousandSeparator' => "'",
                     'symbolType' => 'none',
                 ],
                 'money' => new Money(20170112, $registry->getByCode('RUB')),
-                'expected' => '20&nbsp;170&nbsp;112',
+                'expected' => "20'170'112",
                 'message' => 'Must hide currency symbol',
             ],
         ];
