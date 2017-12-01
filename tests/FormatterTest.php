@@ -64,7 +64,16 @@ class FormatterTest extends TestCase {
                 ],
                 'money' => new Money(9253377, $registry->getByCode('USD')),
                 'expected' => '$&nbsp;9&nbsp;250&nbsp;000',
-                'message' => 'Must round amount to given number of significant digis',
+                'message' => 'Must round amount to given number of significant digits',
+            ],
+            [
+                'config' => [
+                    'thousandSeparator' => "'",
+                    'symbolType' => 'none',
+                ],
+                'money' => new Money(20170112, $registry->getByCode('RUB')),
+                'expected' => "20'170'112",
+                'message' => 'Must hide currency symbol',
             ],
         ];
     }

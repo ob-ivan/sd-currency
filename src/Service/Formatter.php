@@ -18,6 +18,7 @@ class Formatter {
     const CONFIG_SYMBOL_TYPE_UNICODE = 'unicode';
     const CONFIG_SYMBOL_TYPE_FONT_AWESOME = 'fontAwesome';
     const CONFIG_SYMBOL_TYPE_MAP = 'map';
+    const CONFIG_SYMBOL_TYPE_NONE = 'none';
 
     const CONFIG_ROUND_DIRECTION_NONE  = 'none';
     const CONFIG_ROUND_DIRECTION_CEIL  = 'ceil';
@@ -65,6 +66,9 @@ class Formatter {
     public function formatMoney(Money $money): string {
         $amount = $this->round($money->getAmount());
         $formatted = number_format($amount, 0, '.', $this->config[self::CONFIG_KEY_THOUSAND_SEPARATOR]);
+        if ($this->config[self::CONFIG_KEY_SYMBOL_TYPE] === self::CONFIG_SYMBOL_TYPE_NONE) {
+            return $formatted;
+        }
         $symbol = $this->getSymbol($money->getCurrency());
         $parts = $money->getCurrency()->getPosition() === Currency::POSITION_AFTER
             ? [$formatted, $symbol]
