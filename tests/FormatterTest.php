@@ -75,6 +75,14 @@ class FormatterTest extends TestCase {
                 'expected' => "20'170'112",
                 'message' => 'Must hide currency symbol',
             ],
+            [
+                'config' => [
+                    'symbolSeparator' => '',
+                ],
+                'money' => new Money(0, $registry->getByCode('USD')),
+                'expected' => '$0',
+                'message' => 'Must format zero value',
+            ],
         ];
     }
 }
