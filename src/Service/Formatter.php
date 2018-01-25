@@ -122,6 +122,9 @@ class Formatter {
     }
 
     private function round(int $amount): int {
+        if (!$amount) {
+            return 0;
+        }
         $multiplier = 10 ** floor(log10($amount) - $this->config[self::CONFIG_KEY_ROUND_DIGITS] + 1);
         $a = $amount / $multiplier;
         switch ($this->config[self::CONFIG_KEY_ROUND_DIRECTION]) {
