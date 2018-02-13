@@ -142,6 +142,18 @@ When using dependency injection you may provide a configuration file to set up y
 currency:
     store:
         class: App\Currency\Store
+    formatter:
+        myAwesomeFormat:
+            thousandSeparator: ','
+            symbolType: fontAwesome
+            roundDirection: ceil
+            roundDigits: 2
+        myOtherFormat:
+            ...
+    updater:
+        url: https://money.example.com/
+        xpath: //currency[code = "$code"]/rate
+        updateInterval: 3 hours
 ```
 
 Use `ConfigLoader` to populate a container with config values:
@@ -157,7 +169,15 @@ $container = new Container(['config' => $config]);
 $container->connect(new CurrencyProvider());
 ```
 
-This will inject an instance of `App\Currency\Store` into repository.
+This will inject config values into corresponding services:
+
+```
+$container->inject(function ($currency) {
+    $store = $currency->getStore(); // instance of App\Currency\Store
+    $formatter = $currency->getFormatter('myAwesomeFormat'); // uses config values
+    $updater = $currency->getUpdater(); // uses config values
+});
+```
 
 Development
 ===========
