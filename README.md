@@ -10,8 +10,8 @@ composer require ob-ivan/sd-currency
 Usage
 =====
 
-Currencies Registry
--------------------
+Registry
+--------
 A currency instance associates currency code with its representations in Unicode and as an HTML entity.
 
 These currencies are supported:
@@ -19,7 +19,7 @@ These currencies are supported:
 - EUR
 - USD
 
-You can enumerate available currencies like follows:
+You can enumerate available currencies using a registry instance:
 
 ```php
 use SD\Currency\Model\Registry;
@@ -80,10 +80,10 @@ $repository->setStore($store);
 $options = $repository->getOptions();
 ```
 
-The store is used to--sorry--store currency rates and update time. The available file store
+The store is used to--ahem--store currency rates and update time. The available file store
 implementation uses a json file on hard drive. You can implement `SD\Currency\Store\StoreInterface`
 to provide your own kind of store, e.g. in database or memcache. See file store implementation
-for the details.
+for details.
 
 Updater
 -------
@@ -113,23 +113,8 @@ $this->getCurrency()->getUpdater($updaterConfig)->updateRates();
 
 Dependency Injection
 --------------------
-If you use `SD\DependencyInjection\Container` in your application, you may want to create your own
-provider to handle custom store:
-
-```php
-use MyApp\Currency\RedisStore;
-use SD\Currency\DependencyInjection\CurrencyProvider;
-
-class CurrencyProvider extends CurrencyProvider {
-    public function provide() {
-        $currency = parent::provide();
-        $currency->setStore(new RedisStore());
-        return $currency;
-    }
-}
-```
-
-Consumers may use dependency injection trait which takes advantage of the auto declare feature:
+If you use `SD\DependencyInjection\Container` in your application,
+consumers may import dependency injection trait to take advantage of the autodeclare feature:
 
 ```php
 use SD\Currency\DependencyInjection\CurrencyAwareTrait;
@@ -147,6 +132,32 @@ class ExampleController implements AutoDeclarerInterface {
     }
 }
 ```
+
+Configuration
+-------------
+When using dependency injection you may provide a configuration file to set up your services:
+
+```yaml
+# config/currency.yaml
+currency:
+    store:
+        class: App\Currency\Store
+```
+
+Use `ConfigLoader` to populate a container with config values:
+
+```php
+use SD\Config\ConfigLoader;
+use SD\Currency\DependencyInjection\CurrencyProvider;
+use SD\DependencyInjection\Container;
+
+$loader = new ConfigLoader('/path/to/config/dir');
+$config = $loader->load();
+$container = new Container(['config' => $config]);
+$container->connect(new CurrencyProvider());
+```
+
+This will inject an instance of `App\Currency\Store` into repository.
 
 Development
 ===========
