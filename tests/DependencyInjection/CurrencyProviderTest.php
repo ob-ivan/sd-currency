@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\DependencyInjection\CurrencyProvider;

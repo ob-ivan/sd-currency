@@ -1,5 +1,5 @@
 <?php
-namespace tests\Updater;
+namespace tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\Model\Registry;

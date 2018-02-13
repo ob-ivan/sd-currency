@@ -1,5 +1,5 @@
 <?php
-namespace tests;
+namespace tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\Model\Money;
@@ -8,7 +8,8 @@ use SD\Currency\Service\Converter;
 use SD\Currency\Store\ArrayStore;
 use SD\Currency\Store\Record;
 
-class ConverterTest extends TestCase {
+class ConverterTest extends TestCase
+{
     private $registry;
     private $store;
 
