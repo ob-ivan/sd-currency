@@ -4,14 +4,15 @@ namespace tests\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use SD\Currency\DependencyInjection\CurrencyProvider;
 use SD\Currency\Repository;
-use SD\Currency\Store\ArrayStore;
 use SD\DependencyInjection\Container;
 
 class CurrencyProviderTest extends TestCase
 {
     public function testConnect()
     {
-        $container = new Container();
+        $container = new Container([
+            'config' => []
+        ]);
         $provider = new CurrencyProvider();
         $container->connect($provider);
         $repository = $container->get($provider->getServiceName());
@@ -20,11 +21,15 @@ class CurrencyProviderTest extends TestCase
 
     public function testStoreFromConfig()
     {
+        $dir = '/path/to/data';
         $container = new Container([
             'config' => [
                 'currency' => [
                     'store' => [
-                        'class' => ArrayStore::class,
+                        'class' => MockFileStore::class,
+                        'args' => [
+                            'dir' => $dir,
+                        ],
                     ],
                 ],
             ],
@@ -33,6 +38,7 @@ class CurrencyProviderTest extends TestCase
         $container->connect($provider);
         $repository = $container->get($provider->getServiceName());
         $store = $repository->getStore();
-        $this->assertInstanceOf(ArrayStore::class, $store, 'Store MUST be an instance of configured class');
+        $this->assertInstanceOf(MockFileStore::class, $store, 'Store MUST be an instance of configured class');
+        $this->assertEquals($dir, $store->getDir(), 'MUST inject argument value from config');
     }
 }

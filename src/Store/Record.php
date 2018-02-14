@@ -1,8 +1,8 @@
 <?php
-
 namespace SD\Currency\Store;
 
-class Record implements \JsonSerializable {
+class Record implements \JsonSerializable
+{
     /** @var $code string */
     private $code;
 
