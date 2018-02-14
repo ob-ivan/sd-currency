@@ -39,6 +39,7 @@ class CurrencyProviderTest extends TestCase
         $repository = $container->get($provider->getServiceName());
         $store = $repository->getStore();
         $this->assertInstanceOf(MockFileStore::class, $store, 'Store MUST be an instance of configured class');
-        $this->assertEquals($dir, $store->getDir(), 'MUST inject argument value from config');
+        $this->assertEquals($dir, $store->getDir(), 'MUST inject argument value from config into store');
+        $this->assertSame($container, $store->getContainer(), 'MUST inject services from container into store');
     }
 }
