@@ -20,7 +20,7 @@ class UpdaterTest extends TestCase {
             [
                 'url' => __DIR__ . '/rates.xml',
                 'xpath' => '/currencies/currency[code = "$code"]/rate',
-                'update_interval' => '2 min',
+                'updateInterval' => '2 min',
             ]
         );
         $updater->updateRates();

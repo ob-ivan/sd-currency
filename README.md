@@ -161,9 +161,11 @@ currency:
         myOtherFormat:
             ...
     updater:
-        url: https://money.example.com/
-        xpath: //currency[code = "$code"]/rate
-        updateInterval: 3 hours
+        class: App\Currency\Updater
+        config:
+            url: https://money.example.com/
+            xpath: //currency[code = "$code"]/rate
+            updateInterval: 3 hours
 ```
 
 Use `ConfigLoader` to populate a container with config values:

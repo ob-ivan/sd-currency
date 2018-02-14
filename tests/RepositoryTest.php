@@ -111,7 +111,7 @@ class RepositoryTest extends TestCase
         $repository->getFormatter($repository);
     }
 
-    public function testGetUpdater()
+    public function testGetUpdaterRepositoryConfig()
     {
         $config = [
             'url' => 'https://money.example.com/',
@@ -125,12 +125,36 @@ class RepositoryTest extends TestCase
                     'records' => [],
                 ],
             ],
-            'updater' => $config + [
+            'updater' => [
                 'class' => MockUpdater::class,
+                'config' => $config,
             ],
         ]);
         $updater = $repository->getUpdater();
         $this->assertInstanceOf(MockUpdater::class, $updater, 'Must return an instance of provided class');
         $this->assertEquals($config, $updater->getConfig(), 'Must inject provided config into the instance');
+    }
+
+    public function testGetUpdaterRunTimeConfig()
+    {
+        $config = [
+            'url' => 'https://money.example.com/',
+            'xpath' => '//currency[code = "$code"]/rate',
+            'updateInterval' => '7 days',
+        ];
+        $repository = new Repository([
+            'store' => [
+                'class' => ArrayStore::class,
+                'args' => [
+                    'records' => [],
+                ],
+            ],
+            'updater' => [
+                'class' => MockUpdater::class,
+            ],
+        ]);
+        $updater = $repository->getUpdater($config);
+        $this->assertInstanceOf(MockUpdater::class, $updater, 'Must return an instance of provided class');
+        $this->assertEquals($config, $updater->getConfig(), 'Must use runtime config when provided');
     }
 }

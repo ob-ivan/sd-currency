@@ -43,9 +43,12 @@ class Repository
 
     // Service //
 
-    public function getUpdater(array $config = [])
+    public function getUpdater(array $runtimeConfig = [])
     {
-        return new Updater($this->registry, $this->getStore(), $config);
+        $config = $this->config['updater'] ?? [];
+        $class = $config['class'] ?? Updater::class;
+        $updaterConfig = $runtimeConfig + ($config['config'] ?? []);
+        return new $class($this->registry, $this->getStore(), $updaterConfig);
     }
 
     /**
