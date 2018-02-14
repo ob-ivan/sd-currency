@@ -41,47 +41,11 @@ class Repository
         return new Money(intval($amount), $currency);
     }
 
-    // Store //
-
-    public function createRecord($code, $rate, $datetime)
-    {
-        return new Record($code, $rate, $datetime);
-    }
-
-    /**
-     * @deprecated Pass store config to the constructor instead.
-    **/
-    public function setStore(StoreInterface $store)
-    {
-        $this->store = $store;
-    }
-
-    public function getStore(): ?StoreInterface
-    {
-        return $this->store;
-    }
-
-    public function getOptions()
-    {
-        return array_map(
-            function (Currency $currency) {
-                $code = $currency->getCode();
-                $record = $this->store->get($code);
-                return (object)[
-                    'code' => $code,
-                    'symbol' => $currency->getHtml(),
-                    'rate' => floatval($record ? $record->getRate() : 0),
-                ];
-            },
-            $this->registry->getAll()
-        );
-    }
-
     // Service //
 
     public function getUpdater(array $config = [])
     {
-        return new Updater($this->registry, $this->store, $config);
+        return new Updater($this->registry, $this->getStore(), $config);
     }
 
     /**
@@ -113,6 +77,49 @@ class Repository
 
     public function getConverter()
     {
-        return new Converter($this->registry, $this->store);
+        return new Converter($this->registry, $this->getStore());
+    }
+
+    // Store //
+
+    public function createRecord($code, $rate, $datetime)
+    {
+        return new Record($code, $rate, $datetime);
+    }
+
+    public function getOptions()
+    {
+        return array_map(
+            function (Currency $currency) {
+                $code = $currency->getCode();
+                $record = $this->getStore()->get($code);
+                return (object)[
+                    'code' => $code,
+                    'symbol' => $currency->getHtml(),
+                    'rate' => floatval($record ? $record->getRate() : 0),
+                ];
+            },
+            $this->registry->getAll()
+        );
+    }
+
+    /**
+     * @deprecated Pass store config to the constructor instead.
+    **/
+    public function setStore(StoreInterface $store)
+    {
+        trigger_error(__METHOD__ . ' is deprecated, use constructor config instead');
+        $this->store = $store;
+    }
+
+    public function getStore(): StoreInterface
+    {
+        if (!$this->store) {
+            $config = $this->config['store'];
+            $class = $config['class'];
+            $args = array_values($config['args'] ?? []);
+            $this->store = new $class(...$args);
+        }
+        return $this->store;
     }
 }

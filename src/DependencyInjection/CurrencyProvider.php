@@ -21,14 +21,7 @@ class CurrencyProvider implements AutoDeclarerInterface, ProviderInterface
 
     public function provide()
     {
-        $config = $this->getConfig('currency');
-        $repository = new Repository();
-        if (isset($config['store']['class'])) {
-            $args = array_values($config['store']['args'] ?? []);
-            $repository->setStore(
-                $this->getContainer()->produce(new $config['store']['class'](...$args))
-            );
-        }
+        $repository = new Repository($this->getConfig('currency') ?? []);
         return $repository;
     }
 }

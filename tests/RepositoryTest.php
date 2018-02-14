@@ -44,8 +44,14 @@ class RepositoryTest extends TestCase
 
     public function testGetOptions()
     {
-        $repository = new Repository();
-        $repository->setStore(new FileStore(__DIR__));
+        $repository = new Repository([
+            'store' => [
+                'class' => FileStore::class,
+                'args' => [
+                    'dir' => __DIR__,
+                ],
+            ],
+        ]);
         $options = $repository->getOptions();
         $this->assertInternalType('array', $options, 'Options must be an array');
         $this->assertGreaterThanOrEqual(3, count($options), 'Must return at least 3 options');
@@ -64,8 +70,14 @@ class RepositoryTest extends TestCase
 
     public function testGetConverter()
     {
-        $repository = new Repository();
-        $repository->setStore(new ArrayStore([]));
+        $repository = new Repository([
+            'store' => [
+                'class' => ArrayStore::class,
+                'args' => [
+                    'records' => [],
+                ],
+            ],
+        ]);
         $converter = $repository->getConverter();
         $this->assertInstanceOf(Converter::class, $converter, 'Must return instance of converter');
     }
