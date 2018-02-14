@@ -183,7 +183,7 @@ $container->connect(new CurrencyProvider());
 
 This will inject config values into corresponding services:
 
-```
+```php
 $container->inject(function ($currency) {
     $store = $currency->getStore(); // instance of App\Currency\Store
     $formatter = $currency->getFormatter('myAwesomeFormat'); // uses config values
