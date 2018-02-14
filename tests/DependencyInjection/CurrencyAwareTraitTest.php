@@ -9,7 +9,9 @@ class CurrencyAwareTraitTest extends TestCase
 {
     public function testInheritAutoDeclare()
     {
-        $container = new Container();
+        $container = new Container([
+            'config' => [],
+        ]);
         $provider = new CurrencyProvider();
         $container->connect($provider);
         $expectedService = $container->get($provider->getServiceName());

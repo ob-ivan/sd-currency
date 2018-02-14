@@ -1,5 +1,8 @@
 {
     "name": "ob-ivan/sd-currency",
+    "config": {
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "SD\\Currency\\": "src/"
@@ -14,6 +17,7 @@
         "phpunit/phpunit": "^6.2"
     },
     "require": {
+        "ob-ivan/sd-config": "^1.0",
         "ob-ivan/sd-dependency-injection": "^1.5"
     }
 }
