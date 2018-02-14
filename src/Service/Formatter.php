@@ -32,7 +32,7 @@ class Formatter implements FormatterInterface
     const CONFIG_DEFAULT_ROUND_DIGITS = 3;
 
     private $registry;
-    private $config = [];
+    protected $config = [];
 
     public function __construct(Registry $registry, array $config = [])
     {

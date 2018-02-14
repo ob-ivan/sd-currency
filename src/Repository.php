@@ -96,17 +96,19 @@ class Repository
     **/
     public function getFormatter($formatNameOrConfig): FormatterInterface
     {
+        $config = $this->config['formatter'];
+        $class = $config['class'] ?? Formatter::class;
         if (is_string($formatNameOrConfig)) {
-            $config = $this->config['formatter'][$formatNameOrConfig];
+            $formatConfig = $config[$formatNameOrConfig];
         } elseif (is_array($formatNameOrConfig)) {
-            $config = $formatNameOrConfig;
+            $formatConfig = $formatNameOrConfig;
         } else {
             throw new CurrencyException(
                 'Argument 1 of ' . __METHOD__ . ' must be either string or array, ' .
                 gettype($formatNameOrConfig) . ' given'
             );
         }
-        return new Formatter($this->registry, $config);
+        return new $class($this->registry, $formatConfig);
     }
 
     public function getConverter()
