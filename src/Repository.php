@@ -112,13 +112,15 @@ class Repository
         $this->store = $store;
     }
 
-    public function getStore(): StoreInterface
+    public function getStore(): ?StoreInterface
     {
         if (!$this->store) {
-            $config = $this->config['store'];
-            $class = $config['class'];
-            $args = array_values($config['args'] ?? []);
-            $this->store = new $class(...$args);
+            if (isset($this->config['store'])) {
+                $config = $this->config['store'];
+                $class = $config['class'];
+                $args = array_values($config['args'] ?? []);
+                $this->store = new $class(...$args);
+            }
         }
         return $this->store;
     }
