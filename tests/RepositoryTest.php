@@ -2,6 +2,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use SD\Currency\CurrencyException;
 use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 use SD\Currency\Repository;
@@ -101,5 +102,12 @@ class RepositoryTest extends TestCase
         $formatter = $repository->getFormatter($formatName);
         $this->assertInstanceOf(MockFormatter::class, $formatter, 'Must return instance of provided class');
         $this->assertEquals($formatConfig, $formatter->getConfig(), 'Must configure formatter with provided format');
+    }
+
+    public function testGetFormatterException()
+    {
+        $repository = new Repository();
+        $this->expectException(CurrencyException::class);
+        $repository->getFormatter($repository);
     }
 }

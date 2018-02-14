@@ -60,7 +60,7 @@ class Repository
     **/
     public function getFormatter($formatNameOrConfig): FormatterInterface
     {
-        $config = $this->config['formatter'];
+        $config = $this->config['formatter'] ?? [];
         $class = $config['class'] ?? Formatter::class;
         if (is_string($formatNameOrConfig)) {
             $formatConfig = $config[$formatNameOrConfig];
