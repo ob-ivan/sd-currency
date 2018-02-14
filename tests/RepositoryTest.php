@@ -110,4 +110,27 @@ class RepositoryTest extends TestCase
         $this->expectException(CurrencyException::class);
         $repository->getFormatter($repository);
     }
+
+    public function testGetUpdater()
+    {
+        $config = [
+            'url' => 'https://money.example.com/',
+            'xpath' => '//currency[code = "$code"]/rate',
+            'updateInterval' => '7 days',
+        ];
+        $repository = new Repository([
+            'store' => [
+                'class' => ArrayStore::class,
+                'args' => [
+                    'records' => [],
+                ],
+            ],
+            'updater' => $config + [
+                'class' => MockUpdater::class,
+            ],
+        ]);
+        $updater = $repository->getUpdater();
+        $this->assertInstanceOf(MockUpdater::class, $updater, 'Must return an instance of provided class');
+        $this->assertEquals($config, $updater->getConfig(), 'Must inject provided config into the instance');
+    }
 }
