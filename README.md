@@ -51,7 +51,7 @@ use SD\Currency\Service\Formatter;
 $registry = new Registry();
 $formatter = new Formatter($registry, ['thousandSeparator' => '\'']);
 // or using dependency injection:
-$formatter = $this->getCurrency()->getFormatter(['thousandSeparator' => '\'']);
+$formatter = $this->getCurrency()->getFormatter($formatName);
 
 echo $formatter->formatMoney(new Money(10000, $registry->getByCode('USD'))); // $ 10'000
 echo $formatter->formatMoney(new Money(590000, $registry->getByCode('RUB'))); // 590'000 ₽
@@ -64,32 +64,39 @@ All functions are available within repository instance which acts as a library f
 ```php
 use SD\Currency\Repository;
 
-$repository = new Repository();
-$config = $repository->getConfigByCode('EUR');
+$repository = new Repository($config);
 ```
 
-Some methods require a store instance to be provided to the repository:
+Some of its methods require a store class to be configured:
 
 ```php
 use SD\Currency\Repository;
 use SD\Currency\Store\FileStore;
 
-$repository = new Repository();
-$store = new FileStore(__DIR__ . '/currency_cache');
-$repository->setStore($store);
+$repository = new Repository([
+    'store' => FileStore::class,
+    'args' => [
+        'dir' => __DIR__ . '/currency_cache',
+    ],
+]);
 $options = $repository->getOptions();
 ```
 
-The store is used to--ahem--store currency rates and update time. The available file store
-implementation uses a json file on hard drive. You can implement `SD\Currency\Store\StoreInterface`
-to provide your own kind of store, e.g. in database or memcache. See file store implementation
-for details.
+The store is used to retrieve currency rates and to persist them when updated (see Updater secion).
+
+Two store implementations are provided by this library:
+- `FileStore` uses a json file on hard drive.
+- `ArrayStore` only keeps data in memory and is well suited for unit testing.
+
+You can also implement `SD\Currency\Store\StoreInterface` to provide your own kind of store,
+e.g. in database or memcache. Then pass its class name to `Repository` constructor as shown above.
 
 Updater
 -------
-An updater service runs against the provided store and sets up exchange rates from the fixed source
-which is Central Bank of Russia by default. You can provide it with your own XML source and XPath,
-as well as update interval (defaults to '1 day') if you don't want to make too much requests to your source.
+An updater service runs against the provided store and sets up exchange rates from the fixed source.
+The official API of Central Bank of Russia is used by default. You can configure the updater with
+your own XML source and XPath, as well as update interval (defaults to '1 day') if you don't want
+to make too much requests to your source.
 
 ```php
 use SD\Currency\Model\Registry;
@@ -105,10 +112,10 @@ $updater = new Updater($registry, $store, $updaterConfig);
 $updater->updateRates();
 ```
 
-Or in case you inject store into repository at assemble time:
+Or in case you use dependency injection:
 
 ```php
-$this->getCurrency()->getUpdater($updaterConfig)->updateRates();
+$this->getCurrency()->getUpdater()->updateRates();
 ```
 
 Dependency Injection
@@ -121,11 +128,13 @@ use SD\Currency\DependencyInjection\CurrencyAwareTrait;
 use SD\DependencyInjection\AutoDeclarerInterface;
 use SD\DependencyInjection\AutoDeclarerTrait;
 
-class ExampleController implements AutoDeclarerInterface {
+class ExampleController implements AutoDeclarerInterface
+{
     use AutoDeclarerTrait;
     use CurrencyAwareTrait;
 
-    public function exampleAction() {
+    public function exampleAction()
+    {
         return $this->render('example.twig', [
             'currencyOptions' => $this->getCurrency()->getOptions(),
         ]);
@@ -143,6 +152,7 @@ currency:
     store:
         class: App\Currency\Store
     formatter:
+        class: App\Currency\Formatter
         myAwesomeFormat:
             thousandSeparator: ','
             symbolType: fontAwesome

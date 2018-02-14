@@ -10,23 +10,27 @@ use SD\Currency\Service\Updater;
 use SD\Currency\Store\Record;
 use SD\Currency\Store\StoreInterface;
 
-class Repository {
+class Repository
+{
     private $registry;
 
     /** @var StoreInterface */
     private $store = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->registry = new Registry();
     }
 
     // Model //
 
-    public function getRegistry() {
+    public function getRegistry()
+    {
         return $this->registry;
     }
 
-    public function createMoney($amount, $currency) {
+    public function createMoney($amount, $currency)
+    {
         if (is_string($currency)) {
             $currency = $this->registry->getByCode($currency);
         }
@@ -35,19 +39,26 @@ class Repository {
 
     // Store //
 
-    public function createRecord($code, $rate, $datetime) {
+    public function createRecord($code, $rate, $datetime)
+    {
         return new Record($code, $rate, $datetime);
     }
 
-    public function setStore(StoreInterface $store) {
+    /**
+     * @deprecated Pass store config to the constructor instead.
+    **/
+    public function setStore(StoreInterface $store)
+    {
         $this->store = $store;
     }
 
-    public function getStore(): ?StoreInterface {
+    public function getStore(): ?StoreInterface
+    {
         return $this->store;
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         return array_map(
             function (Currency $currency) {
                 $code = $currency->getCode();
@@ -64,27 +75,18 @@ class Repository {
 
     // Service //
 
-    public function getUpdater(array $config = []) {
+    public function getUpdater(array $config = [])
+    {
         return new Updater($this->registry, $this->store, $config);
     }
 
-    public function getFormatter(array $config = []) {
+    public function getFormatter(array $config = [])
+    {
         return new Formatter($this->registry, $config);
     }
 
-    public function getConverter() {
+    public function getConverter()
+    {
         return new Converter($this->registry, $this->store);
-    }
-
-    // Deprecated //
-
-    public function getAllConfigs() {
-        trigger_error(__METHOD__ . ' is deprecated, use ' . __CLASS__ . '->getRegistry()->getAll() instead');
-        return Config::all();
-    }
-
-    public function getConfigBySymbol(string $symbol) {
-        trigger_error(__METHOD__ . ' is deprecated, use ' . __CLASS__ . '->getRegistry()->getByHtml() instead');
-        return Config::getBySymbol($symbol);
     }
 }

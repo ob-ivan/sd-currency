@@ -9,11 +9,13 @@ use SD\Currency\Service\Converter;
 use SD\Currency\Store\ArrayStore;
 use SD\Currency\Store\FileStore;
 
-class RepositoryTest extends TestCase {
+class RepositoryTest extends TestCase
+{
     /**
      * @dataProvider createMoneyDataProvider
     **/
-    public function testCreateMoney($amount, $currency, $expectedCurrency) {
+    public function testCreateMoney($amount, $currency, $expectedCurrency)
+    {
         $repository = new Repository();
         $money = $repository->createMoney($amount, $currency);
         $this->assertInstanceOf(Money::class, $money, 'Created money must be of money class');
@@ -21,7 +23,8 @@ class RepositoryTest extends TestCase {
         $this->assertEquals($expectedCurrency, $money->getCurrency(), 'Created currency must match');
     }
 
-    public function createMoneyDataProvider() {
+    public function createMoneyDataProvider()
+    {
         $registry = new Registry();
         return [
             [
@@ -39,7 +42,8 @@ class RepositoryTest extends TestCase {
         ];
     }
 
-    public function testGetOptions() {
+    public function testGetOptions()
+    {
         $repository = new Repository();
         $repository->setStore(new FileStore(__DIR__));
         $options = $repository->getOptions();
@@ -58,10 +62,32 @@ class RepositoryTest extends TestCase {
         }
     }
 
-    public function testGetConverter() {
+    public function testGetConverter()
+    {
         $repository = new Repository();
         $repository->setStore(new ArrayStore([]));
         $converter = $repository->getConverter();
         $this->assertInstanceOf(Converter::class, $converter, 'Must return instance of converter');
+    }
+
+    public function testGetFormatter()
+    {
+        $formatName = 'short';
+        $formatConfig = [
+            'thousandSeparator' => '',
+            'symbolSeparator' => '',
+            'symbolType' => 'none',
+            'roundDirection' => 'round',
+            'roundDigits' => 1,
+        ];
+        $repository = new Repository([
+            'formatter' => [
+                'class' => MockFormatter::class,
+                $formatName => $formatConfig,
+            ],
+        ]);
+        $formatter = $repository->getFormatter($formatName);
+        $this->assertInstanceOf(MockFormatter::class, $formatter, 'Must return instance of provided class');
+        $this->assertEquals($formatConfig, $formatter->getConfig(), 'Must configure formatter with provided format');
     }
 }
