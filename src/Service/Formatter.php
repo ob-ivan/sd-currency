@@ -5,7 +5,7 @@ use SD\Currency\Model\Currency;
 use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 
-class Formatter
+class Formatter implements FormatterInterface
 {
     const CONFIG_KEY_THOUSAND_SEPARATOR = 'thousandSeparator';
     const CONFIG_KEY_SYMBOL_SEPARATOR = 'symbolSeparator';

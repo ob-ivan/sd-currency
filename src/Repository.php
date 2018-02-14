@@ -6,19 +6,23 @@ use SD\Currency\Model\Registry;
 use SD\Currency\Model\Money;
 use SD\Currency\Service\Converter;
 use SD\Currency\Service\Formatter;
+use SD\Currency\Service\FormatterInterface;
 use SD\Currency\Service\Updater;
 use SD\Currency\Store\Record;
 use SD\Currency\Store\StoreInterface;
 
 class Repository
 {
+    private $config;
+
     private $registry;
 
     /** @var StoreInterface */
     private $store = null;
 
-    public function __construct()
+    public function __construct(array $config = [])
     {
+        $this->config = $config;
         $this->registry = new Registry();
     }
 
@@ -80,8 +84,28 @@ class Repository
         return new Updater($this->registry, $this->store, $config);
     }
 
-    public function getFormatter(array $config = [])
+    /**
+     * Create a formatter with provided format.
+     *
+     * Format may be specified as a format name from repository config
+     * or as an array of config values.
+     *
+     *  @param string|array $formatNameOrConfig
+     *  @return FormatterInterface
+     *  @throws CurrencyException argument has invalid type
+    **/
+    public function getFormatter($formatNameOrConfig): FormatterInterface
     {
+        if (is_string($formatNameOrConfig)) {
+            $config = $this->config['formatter'][$formatNameOrConfig];
+        } elseif (is_array($formatNameOrConfig)) {
+            $config = $formatNameOrConfig;
+        } else {
+            throw new CurrencyException(
+                'Argument 1 of ' . __METHOD__ . ' must be either string or array, ' .
+                gettype($formatNameOrConfig) . ' given'
+            );
+        }
         return new Formatter($this->registry, $config);
     }
 
