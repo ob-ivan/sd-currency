@@ -5,8 +5,8 @@ use SD\Currency\Model\Currency;
 use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 
-class Formatter {
-    // NEW //
+class Formatter implements FormatterInterface
+{
     const CONFIG_KEY_THOUSAND_SEPARATOR = 'thousandSeparator';
     const CONFIG_KEY_SYMBOL_SEPARATOR = 'symbolSeparator';
     const CONFIG_KEY_SYMBOL_TYPE = 'symbolType';
@@ -30,40 +30,24 @@ class Formatter {
     const CONFIG_DEFAULT_SYMBOL_TYPE = 'unicode';
     const CONFIG_DEFAULT_ROUND_DIRECTION = 'none';
     const CONFIG_DEFAULT_ROUND_DIGITS = 3;
-    // OLD //
-    const CONFIG_KEY_SEPARATOR = 'separator';
-    const CONFIG_KEY_FONT_AWESOME = 'fontAwesome';
-
-    const CONFIG_DEFAULT_SEPARATOR = '&thinsp;';
-    const CONFIG_DEFAULT_FONT_AWESOME = true;
-    // END //
 
     private $registry;
-    private $config = [];
+    protected $config = [];
 
-    public function __construct(Registry $registry, array $config = []) {
+    public function __construct(Registry $registry, array $config = [])
+    {
         $this->registry = $registry;
-        if (isset($config[self::CONFIG_KEY_SEPARATOR])) {
-            trigger_error('Use thousandSeparator instead', E_USER_DEPRECATED);
-        }
-        if (isset($config[self::CONFIG_KEY_FONT_AWESOME])) {
-            trigger_error('Use symbolType instead', E_USER_DEPRECATED);
-        }
         $this->config = $config + [
-            // NEW //
             self::CONFIG_KEY_THOUSAND_SEPARATOR => self::CONFIG_DEFAULT_THOUSAND_SEPARATOR,
             self::CONFIG_KEY_SYMBOL_SEPARATOR   => self::CONFIG_DEFAULT_SYMBOL_SEPARATOR,
             self::CONFIG_KEY_SYMBOL_TYPE        => self::CONFIG_DEFAULT_SYMBOL_TYPE,
             self::CONFIG_KEY_ROUND_DIRECTION    => self::CONFIG_DEFAULT_ROUND_DIRECTION,
             self::CONFIG_KEY_ROUND_DIGITS       => self::CONFIG_DEFAULT_ROUND_DIGITS,
-            // OLD //
-            self::CONFIG_KEY_SEPARATOR    => self::CONFIG_DEFAULT_SEPARATOR,
-            self::CONFIG_KEY_FONT_AWESOME => self::CONFIG_DEFAULT_FONT_AWESOME,
-            // END //
         ];
     }
 
-    public function formatMoney(Money $money): string {
+    public function formatMoney(Money $money): string
+    {
         $amount = $this->round($money->getAmount());
         $formatted = number_format($amount, 0, '.', $this->config[self::CONFIG_KEY_THOUSAND_SEPARATOR]);
         if ($this->config[self::CONFIG_KEY_SYMBOL_TYPE] === self::CONFIG_SYMBOL_TYPE_NONE) {
@@ -76,44 +60,8 @@ class Formatter {
         return implode($parts, $this->config[self::CONFIG_KEY_SYMBOL_SEPARATOR]);
     }
 
-    public function formatPrice(string $price, string $symbol): string {
-        trigger_error('Use formatMoney instead', E_USER_DEPRECATED);
-        if ($symbol === '&#8381;') { // rub
-            $format = 'PRICE_SYMBOL';
-        } elseif (in_array($symbol, array(
-            '&#36;',    // usd
-            '&#8364;',  // euro
-            '&euro;',
-        ))) {
-            $format = 'SYMBOL_PRICE';
-        } else {
-            // Цена по запросу
-            $format = 'PRICE';
-        }
-        if ($format === 'PRICE') {
-            $output = $price;
-        } else {
-            $separator = $this->config[self::CONFIG_KEY_SEPARATOR];
-            $formatted = preg_replace(
-                '/(?<=\d)&(?=\d)/',
-                $separator,
-                number_format((int)$price, 0, '.', $separator)
-            );
-            if ($this->config[self::CONFIG_KEY_FONT_AWESOME]) {
-                $symbol = $this->getFontAwesome($symbol);
-            }
-            $parts = [];
-            if ($format === 'PRICE_SYMBOL') {
-                $parts = [$formatted, $symbol];
-            } elseif ($format === 'SYMBOL_PRICE') {
-                $parts = [$symbol, $formatted];
-            }
-            $output = implode($parts, '&nbsp;');
-        }
-        return $output;
-    }
-
-    public function getFontAwesome($symbol) {
+    public function getFontAwesome($symbol)
+    {
         $currency = $this->registry->getByHtml($symbol);
         if ($currency) {
             return $this->getFontAwesomeByCurrency($currency);
@@ -121,7 +69,8 @@ class Formatter {
         return '';
     }
 
-    private function round(int $amount): int {
+    private function round(int $amount): int
+    {
         if (!$amount) {
             return 0;
         }
@@ -135,7 +84,8 @@ class Formatter {
         return round($a * $multiplier);
     }
 
-    private function getSymbol(Currency $currency): string {
+    private function getSymbol(Currency $currency): string
+    {
         switch ($this->config[self::CONFIG_KEY_SYMBOL_TYPE]) {
             case self::CONFIG_SYMBOL_TYPE_HTML:         return $currency->getHtml();
             case self::CONFIG_SYMBOL_TYPE_UNICODE:      return $currency->getUnicode();
@@ -144,11 +94,13 @@ class Formatter {
         }
     }
 
-    private function getFontAwesomeByCurrency(Currency $currency): string {
+    private function getFontAwesomeByCurrency(Currency $currency): string
+    {
         return $this->getFontAwesomeByCode($currency->getCode());
     }
 
-    private function getFontAwesomeByCode(string $code): string {
+    private function getFontAwesomeByCode(string $code): string
+    {
         return '<i class="fa fa-' . strtolower($code) . '" aria-hidden="true"></i>';
     }
 }

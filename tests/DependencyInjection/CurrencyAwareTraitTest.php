@@ -1,13 +1,17 @@
 <?php
-namespace tests\AwareTrait;
+namespace tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\DependencyInjection\CurrencyProvider;
 use SD\DependencyInjection\Container;
 
-class AwareTraitTest extends TestCase {
-    public function testInheritAutoDeclare() {
-        $container = new Container();
+class CurrencyAwareTraitTest extends TestCase
+{
+    public function testInheritAutoDeclare()
+    {
+        $container = new Container([
+            'config' => [],
+        ]);
         $provider = new CurrencyProvider();
         $container->connect($provider);
         $expectedService = $container->get($provider->getServiceName());

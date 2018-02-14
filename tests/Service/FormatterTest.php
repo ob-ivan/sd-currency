@@ -1,12 +1,13 @@
 <?php
-namespace tests;
+namespace tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 use SD\Currency\Service\Formatter;
 
-class FormatterTest extends TestCase {
+class FormatterTest extends TestCase
+{
     /**
      * @dataProvider formatMoneyDataProvider
     **/

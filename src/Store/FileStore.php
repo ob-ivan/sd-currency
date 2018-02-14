@@ -1,10 +1,12 @@
 <?php
 namespace SD\Currency\Store;
 
-class FileStore implements StoreInterface {
+class FileStore implements StoreInterface
+{
     const FILENAME = 'currencies.json';
 
-    public function __construct(string $dir) {
+    public function __construct(string $dir)
+    {
         $this->filename = $dir . '/' . self::FILENAME;
     }
 
@@ -12,7 +14,8 @@ class FileStore implements StoreInterface {
      * @param $code string
      * @return SD_Currency_Option
     **/
-    public function get(string $code): ?Record {
+    public function get(string $code): ?Record
+    {
         if (!file_exists($this->filename)) {
             return null;
         }
@@ -30,7 +33,8 @@ class FileStore implements StoreInterface {
      * @param $rate     float
      * @param $datetime DateTime
     **/
-    public function set(string $code, float $rate, \DateTime $datetime) {
+    public function set(string $code, float $rate, \DateTime $datetime)
+    {
         if (file_exists($this->filename)) {
             $contents = file_get_contents($this->filename);
             $currencies = json_decode($contents);

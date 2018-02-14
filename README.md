@@ -10,8 +10,8 @@ composer require ob-ivan/sd-currency
 Usage
 =====
 
-Currencies Registry
--------------------
+Registry
+--------
 A currency instance associates currency code with its representations in Unicode and as an HTML entity.
 
 These currencies are supported:
@@ -19,7 +19,7 @@ These currencies are supported:
 - EUR
 - USD
 
-You can enumerate available currencies like follows:
+You can enumerate available currencies using a registry instance:
 
 ```php
 use SD\Currency\Model\Registry;
@@ -51,7 +51,7 @@ use SD\Currency\Service\Formatter;
 $registry = new Registry();
 $formatter = new Formatter($registry, ['thousandSeparator' => '\'']);
 // or using dependency injection:
-$formatter = $this->getCurrency()->getFormatter(['thousandSeparator' => '\'']);
+$formatter = $this->getCurrency()->getFormatter($formatName);
 
 echo $formatter->formatMoney(new Money(10000, $registry->getByCode('USD'))); // $ 10'000
 echo $formatter->formatMoney(new Money(590000, $registry->getByCode('RUB'))); // 590'000 ₽
@@ -64,32 +64,39 @@ All functions are available within repository instance which acts as a library f
 ```php
 use SD\Currency\Repository;
 
-$repository = new Repository();
-$config = $repository->getConfigByCode('EUR');
+$repository = new Repository($config);
 ```
 
-Some methods require a store instance to be provided to the repository:
+Some of its methods require a store class to be configured:
 
 ```php
 use SD\Currency\Repository;
 use SD\Currency\Store\FileStore;
 
-$repository = new Repository();
-$store = new FileStore(__DIR__ . '/currency_cache');
-$repository->setStore($store);
+$repository = new Repository([
+    'store' => FileStore::class,
+    'args' => [
+        'dir' => __DIR__ . '/currency_cache',
+    ],
+]);
 $options = $repository->getOptions();
 ```
 
-The store is used to--sorry--store currency rates and update time. The available file store
-implementation uses a json file on hard drive. You can implement `SD\Currency\Store\StoreInterface`
-to provide your own kind of store, e.g. in database or memcache. See file store implementation
-for the details.
+The store is used to retrieve currency rates and to persist them when updated (see Updater secion).
+
+Two store implementations are provided by this library:
+- `FileStore` uses a json file on hard drive.
+- `ArrayStore` only keeps data in memory and is well suited for unit testing.
+
+You can also implement `SD\Currency\Store\StoreInterface` to provide your own kind of store,
+e.g. in database or memcache. Then pass its class name to `Repository` constructor as shown above.
 
 Updater
 -------
-An updater service runs against the provided store and sets up exchange rates from the fixed source
-which is Central Bank of Russia by default. You can provide it with your own XML source and XPath,
-as well as update interval (defaults to '1 day') if you don't want to make too much requests to your source.
+An updater service runs against the provided store and sets up exchange rates from the fixed source.
+The official API of Central Bank of Russia is used by default. You can configure the updater with
+your own XML source and XPath, as well as update interval (defaults to '1 day') if you don't want
+to make too much requests to your source.
 
 ```php
 use SD\Currency\Model\Registry;
@@ -105,47 +112,83 @@ $updater = new Updater($registry, $store, $updaterConfig);
 $updater->updateRates();
 ```
 
-Or in case you inject store into repository at assemble time:
+Or in case you use dependency injection:
 
 ```php
-$this->getCurrency()->getUpdater($updaterConfig)->updateRates();
+$this->getCurrency()->getUpdater()->updateRates();
 ```
 
 Dependency Injection
 --------------------
-If you use `SD\DependencyInjection\Container` in your application, you may want to create your own
-provider to handle custom store:
-
-```php
-use MyApp\Currency\RedisStore;
-use SD\Currency\DependencyInjection\CurrencyProvider;
-
-class CurrencyProvider extends CurrencyProvider {
-    public function provide() {
-        $currency = parent::provide();
-        $currency->setStore(new RedisStore());
-        return $currency;
-    }
-}
-```
-
-Consumers may use dependency injection trait which takes advantage of the auto declare feature:
+If you use `SD\DependencyInjection\Container` in your application,
+consumers may import dependency injection trait to take advantage of the autodeclare feature:
 
 ```php
 use SD\Currency\DependencyInjection\CurrencyAwareTrait;
 use SD\DependencyInjection\AutoDeclarerInterface;
 use SD\DependencyInjection\AutoDeclarerTrait;
 
-class ExampleController implements AutoDeclarerInterface {
+class ExampleController implements AutoDeclarerInterface
+{
     use AutoDeclarerTrait;
     use CurrencyAwareTrait;
 
-    public function exampleAction() {
+    public function exampleAction()
+    {
         return $this->render('example.twig', [
             'currencyOptions' => $this->getCurrency()->getOptions(),
         ]);
     }
 }
+```
+
+Configuration
+-------------
+When using dependency injection you may provide a configuration file to set up your services:
+
+```yaml
+# config/currency.yaml
+currency:
+    store:
+        class: App\Currency\Store
+    formatter:
+        class: App\Currency\Formatter
+        myAwesomeFormat:
+            thousandSeparator: ','
+            symbolType: fontAwesome
+            roundDirection: ceil
+            roundDigits: 2
+        myOtherFormat:
+            ...
+    updater:
+        class: App\Currency\Updater
+        config:
+            url: https://money.example.com/
+            xpath: //currency[code = "$code"]/rate
+            updateInterval: 3 hours
+```
+
+Use `ConfigLoader` to populate a container with config values:
+
+```php
+use SD\Config\ConfigLoader;
+use SD\Currency\DependencyInjection\CurrencyProvider;
+use SD\DependencyInjection\Container;
+
+$loader = new ConfigLoader('/path/to/config/dir');
+$config = $loader->load();
+$container = new Container(['config' => $config]);
+$container->connect(new CurrencyProvider());
+```
+
+This will inject config values into corresponding services:
+
+```
+$container->inject(function ($currency) {
+    $store = $currency->getStore(); // instance of App\Currency\Store
+    $formatter = $currency->getFormatter('myAwesomeFormat'); // uses config values
+    $updater = $currency->getUpdater(); // uses config values
+});
 ```
 
 Development

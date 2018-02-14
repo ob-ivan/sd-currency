@@ -2,6 +2,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use SD\Currency\CurrencyException;
 use SD\Currency\Model\Money;
 use SD\Currency\Model\Registry;
 use SD\Currency\Repository;
@@ -9,11 +10,13 @@ use SD\Currency\Service\Converter;
 use SD\Currency\Store\ArrayStore;
 use SD\Currency\Store\FileStore;
 
-class RepositoryTest extends TestCase {
+class RepositoryTest extends TestCase
+{
     /**
      * @dataProvider createMoneyDataProvider
     **/
-    public function testCreateMoney($amount, $currency, $expectedCurrency) {
+    public function testCreateMoney($amount, $currency, $expectedCurrency)
+    {
         $repository = new Repository();
         $money = $repository->createMoney($amount, $currency);
         $this->assertInstanceOf(Money::class, $money, 'Created money must be of money class');
@@ -21,7 +24,8 @@ class RepositoryTest extends TestCase {
         $this->assertEquals($expectedCurrency, $money->getCurrency(), 'Created currency must match');
     }
 
-    public function createMoneyDataProvider() {
+    public function createMoneyDataProvider()
+    {
         $registry = new Registry();
         return [
             [
@@ -39,9 +43,16 @@ class RepositoryTest extends TestCase {
         ];
     }
 
-    public function testGetOptions() {
-        $repository = new Repository();
-        $repository->setStore(new FileStore(__DIR__));
+    public function testGetOptions()
+    {
+        $repository = new Repository([
+            'store' => [
+                'class' => FileStore::class,
+                'args' => [
+                    'dir' => __DIR__,
+                ],
+            ],
+        ]);
         $options = $repository->getOptions();
         $this->assertInternalType('array', $options, 'Options must be an array');
         $this->assertGreaterThanOrEqual(3, count($options), 'Must return at least 3 options');
@@ -58,10 +69,92 @@ class RepositoryTest extends TestCase {
         }
     }
 
-    public function testGetConverter() {
-        $repository = new Repository();
-        $repository->setStore(new ArrayStore([]));
+    public function testGetConverter()
+    {
+        $repository = new Repository([
+            'store' => [
+                'class' => ArrayStore::class,
+                'args' => [
+                    'records' => [],
+                ],
+            ],
+        ]);
         $converter = $repository->getConverter();
         $this->assertInstanceOf(Converter::class, $converter, 'Must return instance of converter');
+    }
+
+    public function testGetFormatter()
+    {
+        $formatName = 'short';
+        $formatConfig = [
+            'thousandSeparator' => '',
+            'symbolSeparator' => '',
+            'symbolType' => 'none',
+            'roundDirection' => 'round',
+            'roundDigits' => 1,
+        ];
+        $repository = new Repository([
+            'formatter' => [
+                'class' => MockFormatter::class,
+                $formatName => $formatConfig,
+            ],
+        ]);
+        $formatter = $repository->getFormatter($formatName);
+        $this->assertInstanceOf(MockFormatter::class, $formatter, 'Must return instance of provided class');
+        $this->assertEquals($formatConfig, $formatter->getConfig(), 'Must configure formatter with provided format');
+    }
+
+    public function testGetFormatterException()
+    {
+        $repository = new Repository();
+        $this->expectException(CurrencyException::class);
+        $repository->getFormatter($repository);
+    }
+
+    public function testGetUpdaterRepositoryConfig()
+    {
+        $config = [
+            'url' => 'https://money.example.com/',
+            'xpath' => '//currency[code = "$code"]/rate',
+            'updateInterval' => '7 days',
+        ];
+        $repository = new Repository([
+            'store' => [
+                'class' => ArrayStore::class,
+                'args' => [
+                    'records' => [],
+                ],
+            ],
+            'updater' => [
+                'class' => MockUpdater::class,
+                'config' => $config,
+            ],
+        ]);
+        $updater = $repository->getUpdater();
+        $this->assertInstanceOf(MockUpdater::class, $updater, 'Must return an instance of provided class');
+        $this->assertEquals($config, $updater->getConfig(), 'Must inject provided config into the instance');
+    }
+
+    public function testGetUpdaterRunTimeConfig()
+    {
+        $config = [
+            'url' => 'https://money.example.com/',
+            'xpath' => '//currency[code = "$code"]/rate',
+            'updateInterval' => '7 days',
+        ];
+        $repository = new Repository([
+            'store' => [
+                'class' => ArrayStore::class,
+                'args' => [
+                    'records' => [],
+                ],
+            ],
+            'updater' => [
+                'class' => MockUpdater::class,
+            ],
+        ]);
+        $updater = $repository->getUpdater($config);
+        $this->assertInstanceOf(MockUpdater::class, $updater, 'Must return an instance of provided class');
+        $this->assertEquals($config, $updater->getConfig(), 'Must use runtime config when provided');
     }
 }
