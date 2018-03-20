@@ -120,9 +120,13 @@ class Repository
         if (!$this->store) {
             if (isset($this->config['store'])) {
                 $config = $this->config['store'];
-                $class = $config['class'];
-                $args = array_values($config['args'] ?? []);
-                $this->store = new $class(...$args);
+                if ($config instanceof StoreInterface) {
+                    $this->store = $config;
+                } elseif (is_array($config)) {
+                    $class = $config['class'];
+                    $args = array_values($config['args'] ?? []);
+                    $this->store = new $class(...$args);
+                }
             }
         }
         return $this->store;

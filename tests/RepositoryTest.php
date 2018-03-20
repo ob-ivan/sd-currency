@@ -157,4 +157,13 @@ class RepositoryTest extends TestCase
         $this->assertInstanceOf(MockUpdater::class, $updater, 'Must return an instance of provided class');
         $this->assertEquals($config, $updater->getConfig(), 'Must use runtime config when provided');
     }
+
+    public function testGetStoreFromInstance()
+    {
+        $store = new ArrayStore([]);
+        $repository = new Repository([
+            'store' => $store,
+        ]);
+        $this->assertSame($store, $repository->getStore(), 'MUST return the instance provided in config');
+    }
 }
