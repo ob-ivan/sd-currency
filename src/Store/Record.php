@@ -12,25 +12,30 @@ class Record implements \JsonSerializable
     /** @var $udpateTime DateTime */
     private $updateTime;
 
-    public function __construct(string $code, float $rate, \DateTime $updateTime) {
+    public function __construct(string $code, float $rate, \DateTime $updateTime)
+    {
         $this->code = $code;
         $this->rate = $rate;
         $this->updateTime = $updateTime;
     }
 
-    public function getCode() {
+    public function getCode()
+    {
         return $this->code;
     }
 
-    public function getRate() {
+    public function getRate()
+    {
         return $this->rate;
     }
 
-    public function getUpdateTime() {
+    public function getUpdateTime()
+    {
         return $this->updateTime;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'oode' => $this->code,
             'rate' => $this->rate,

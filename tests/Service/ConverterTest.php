@@ -13,7 +13,8 @@ class ConverterTest extends TestCase
     private $registry;
     private $store;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->registry = new Registry();
         $this->store = new ArrayStore([
             new Record('RUB',  1, new \DateTime()),
@@ -25,7 +26,8 @@ class ConverterTest extends TestCase
     /**
      * @dataProvider convertDataProvider
     **/
-    public function testConvert($money, $currency, $expectedAmount, $expectedCurrency, $description) {
+    public function testConvert($money, $currency, $expectedAmount, $expectedCurrency, $description)
+    {
         $converter = new Converter($this->registry, $this->store);
         $converted = $converter->convert($money, $currency);
         $this->assertInstanceOf(Money::class, $converted, "Converted money must be an instance of money class ($description)");
@@ -33,7 +35,8 @@ class ConverterTest extends TestCase
         $this->assertEquals($expectedCurrency, $converted->getCurrency(), "Converted currency must match ($description)");
     }
 
-    public function convertDataProvider() {
+    public function convertDataProvider()
+    {
         $registry = new Registry();
         return [
             [

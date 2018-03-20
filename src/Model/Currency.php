@@ -1,7 +1,8 @@
 <?php
 namespace SD\Currency\Model;
 
-class Currency {
+class Currency
+{
     const POSITION_BEFORE = 1;
     const POSITION_AFTER  = 2;
 
@@ -9,26 +10,31 @@ class Currency {
     private $unicode;
     private $html;
 
-    public function __construct(string $code, string $unicode, string $html, $position) {
+    public function __construct(string $code, string $unicode, string $html, $position)
+    {
         $this->code = $code;
         $this->unicode = $unicode;
         $this->html = $html;
         $this->position = $position;
     }
 
-    public function getCode() {
+    public function getCode()
+    {
         return $this->code;
     }
 
-    public function getUnicode() {
+    public function getUnicode()
+    {
         return $this->unicode;
     }
 
-    public function getHtml() {
+    public function getHtml()
+    {
         return $this->html;
     }
 
-    public function getPosition() {
+    public function getPosition()
+    {
         return $this->position;
     }
 }
